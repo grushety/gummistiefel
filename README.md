@@ -1,5 +1,10 @@
 # gummistiefel
 
+you need to install  
+node.js  
+vue  
+vue-cli (for maps)  
+vue2-google-maps  
 ## Project setup
 ```
 npm install
