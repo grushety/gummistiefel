@@ -1,10 +1,17 @@
 # gummistiefel
 
-you need to install  
+to install  
 node.js  
 vue  
 vue-cli (for maps)  
 vue2-google-maps  
+
+to run   
+npm install  
+npm run serve
+
+it typically runs on localhost 8080
+
 ## Project setup
 ```
 npm install
