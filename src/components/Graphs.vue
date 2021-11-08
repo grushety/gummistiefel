@@ -5,8 +5,14 @@
 </template>
 
 <script>
+    import { Bar } from 'vue-chartjs'
     export default {
         name: "Graphs",
+        extends: Bar,
+
+        mounted () {
+            //this.renderChart(data, options)
+        }
 
     }
 </script>

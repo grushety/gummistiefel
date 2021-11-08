@@ -79,11 +79,53 @@
     }
 
     h1 {
-        padding: 8px;
+        padding: 0 8px;
+        margin:0;
     }
 
     .page {
         padding: 8px;
     }
+    button {
+        padding: 8px 16px;
+        margin: 0 4px;
+        border: 2px solid lightgreen;
+        border-radius: 4px;
+        max-height: 36px;
+        background-color: rgba(144, 238, 144, 0.24)
+    }
+    button:hover {
+        background-color: rgba(133, 206, 144, 0.71);
+        cursor: pointer;
+    }
+    button:active{
+        background-color: rgba(133, 206, 144, 0.71);
+    }
+
+    .input-group {
+        display: flex;
+        flex-direction: column;
+        align-items: flex-start;
+        margin: 8px;
+    }
+
+    label {
+        padding-bottom: 4px;
+        font-family: Calibri, fantasy;
+    }
+
+    input {
+        padding: 4px 8px;
+        border-radius: 4px;
+        border: 1px solid darkgray;
+        color: #455A64;
+    }
+
+    input:focus {
+        box-shadow: none;
+        outline: none;
+        border: 2px solid #8a8a8a;
+    }
+
 
 </style>

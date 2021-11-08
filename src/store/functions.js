@@ -6,7 +6,7 @@ const getUrl = "http://rz-vm154.gfz-potsdam.de:8080/highprecip/events/get?";
 
 export default {
     async getEvents(params){
-        params = "subset=length(20,30)";
+        console.log(queryUrl+params)
         const {data} = await axios.get(queryUrl+params);
         return data;
     },
