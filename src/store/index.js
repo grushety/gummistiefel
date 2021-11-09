@@ -16,7 +16,7 @@ const store = new Vuex.Store({
     locationMarkers: [],
     bounds: {},
     filters:"subset=length(20,100)",
-    length: "10,20",
+    length: "20,100",
     severity: "",
     area: "",
   },

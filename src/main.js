@@ -9,14 +9,46 @@ import * as VueGoogleMaps from "vue2-google-maps" // Import package
 Vue.config.productionTip = false;
 
 Vue.use(VueGoogleMaps, {
-  load: {
-    key: "AIzaSyBROKNbW4uEZWZFnEXp-B1m0NoNYqMYEjQ",
-    libraries: "places"
-  }
+    load: {
+        key: "AIzaSyBROKNbW4uEZWZFnEXp-B1m0NoNYqMYEjQ",
+        libraries: "places"
+    }
+});
+import {Line} from 'vue-chartjs';
+Vue.component('line-chart', {
+    extends: Line,
+    props: {
+        labels: {
+            type: Array,
+            // eslint-disable-next-line vue/require-valid-default-prop
+            default: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
+        },
+        datasets: Array,
+    },
+    watch: {
+        'datasets.length'() {
+            this.renderChartData()
+        },
+        'labels.length'(){
+            this.renderChartData()
+        }
+    },
+    mounted() {
+        this.renderChartData()
+    },
+    methods: {
+        renderChartData() {
+            this.renderChart({
+                labels: this.labels,
+                datasets: this.datasets,
+            }, {responsive: true, maintainAspectRatio: false})
+        }
+    }
+
 });
 
 new Vue({
-  store,
-  router,
-  render: h => h(App)
+    store,
+    router,
+    render: h => h(App)
 }).$mount('#app');

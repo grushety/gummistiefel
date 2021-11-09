@@ -17,9 +17,10 @@
         <line-chart :labels="labels" :datasets="datasets"></line-chart>
     </div>
 </template>
+
 <script>
     export default {
-        name: "Graphs",
+        name: "DetailsGraph",
         props: {
             events: Array,
         },
@@ -33,10 +34,10 @@
         },
         computed: {
             labels() {
-                return this.events.map(it => it.start);
+                return this.events.map(it => it.date);
             },
             lengths() {
-                let l = this.events.map(it => it.length);
+                let l = this.events.map(it => it.size);
                 return {
                     label: "Duration",
                     data: l,
@@ -87,7 +88,6 @@
             }
         }
     }
-
 </script>
 
 <style scoped>

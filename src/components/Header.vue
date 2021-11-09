@@ -2,7 +2,7 @@
     <div class = "header">
         <img id="logo" src="../assets/hu-logo.jpg" title="logo" :alt="'logo'">
         <div class="header-title">
-            <h3 class="title">Visuelle Darstellung des Gummistiefelprojekts </h3>
+            <h3 class="title">Visual representation of the "Gummistiefel" project </h3>
         </div>
     </div>
 </template>

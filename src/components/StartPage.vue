@@ -1,15 +1,15 @@
 <template>
     <div class="startPage">
         <div class="tabPanel">
-            <h1>Event list</h1>
-            <p class="totalSize">Total number of events : {{events.length}}</p>
+            <h1 class="title">Event list</h1>
             <p class="tab" :class="showTable? 'selected': ''" @click="setShowTable">All data</p>
             <p class="tab" :class="showGraphs? 'selected': ''" @click="setShowGraphs">Graphs</p>
+            <p class="totalSize">Total number of events : {{events.length}}</p>
         </div>
-        <p>Please enter you filter data in format: max, min</p>
         <div class="filterPanel">
+            <p class="format">Filter data format: min, max</p>
             <div class="lengthFilter input-group">
-                <label for="length">Dauer</label>
+                <label for="length">Duration</label>
                 <input id="length" type="text" v-model="lengthFilter" @input="setLengthFilter()">
             </div>
             <div class="severityFilter input-group">
@@ -28,7 +28,7 @@
                 <tr>
                     <th>ID</th>
                     <th>Area</th>
-                    <th class="small">Dauer</th>
+                    <th class="small">Duration</th>
                     <th class="small">Severity</th>
                     <th>Start</th>
                 </tr>
@@ -45,7 +45,7 @@
             </table>
         </div>
         <div v-if="showGraphs">
-            <Graphs></Graphs>
+            <Graphs :events="events"></Graphs>
         </div>
     </div>
 </template>
@@ -67,13 +67,16 @@
             return {
                 showTable: true,
                 showGraphs: false,
-                lengthFilter: "10,20",
+                lengthFilter: "20,100",
                 severityFilter: "",
                 areaFilter: "",
             }
         },
         computed: {
-            ...mapState(["events"])
+            ...mapState(["events"]),
+            labels(){
+                return this.events.map(it => it.start);
+            },
         },
         methods: {
             ...mapActions(["getEvents", "setFilters", "setSeverity", "setLength", "setArea"]),
@@ -107,7 +110,7 @@
     }
 
     .tabPanel {
-        display: flex;
+        display: inline;
         align-items: center;
         width: 100%;
     }
@@ -121,6 +124,7 @@
         min-width: 60px;
         background-color: rgba(144, 238, 144, 0.24);
         justify-items: flex-end;
+        float: right;
     }
 
     .selected {
@@ -152,8 +156,17 @@
         width: 100%;
         border-radius: 4px;
     }
+    .format {
+        align-self: flex-end;
+        color: #8a8a8a;
+        font-size: small;
+    }
     .totalSize{
-        justify-self: flex-end;
+        float: right;
+        margin-right: 30px;
+    }
+    .title {
+        float: left;
     }
 
 </style>

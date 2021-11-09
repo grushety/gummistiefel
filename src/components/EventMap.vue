@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="mapWrapper">
         <gmap-map
                 :zoom="8"
                 :center="center"
@@ -40,5 +40,8 @@
 </script>
 
 <style scoped>
-
+.mapWrapper{
+    padding: 24px;
+    margin: 16px;
+}
 </style>

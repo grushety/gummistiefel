@@ -15,8 +15,8 @@
                     <tr>
                         <th>Index</th>
                         <th>Area</th>
-                        <th class="small">Dauer</th>
-                        <th class="small">Severityx</th>
+                        <th class="small">Duration</th>
+                        <th class="small">Severity</th>
                         <th>Zeit</th>
                         <th class="mid">Latitude</th>
                         <th class="mid">Longitude</th>
@@ -47,13 +47,13 @@
                 </table>
             </div>
         </div>
-        <div class="showMap" v-if="showMap">
-            Hier soll map angezeigt werden
 
+        <div class="showMap" v-if="showMap">
             <EventMap :items="locationMarkers" :bounds="bounds"/>
         </div>
+
         <div class="showGraphs" v-if="showGraphs">
-            Hier soll vershieden graphen angezeigt werden
+            <DetailsGraph :events="selectedEvent.timeseries" ></DetailsGraph>
         </div>
     </div>
 </template>
@@ -62,11 +62,13 @@
     import store from "../store";
     import {mapState} from "vuex";
     import EventMap from "./EventMap"
+    import DetailsGraph from "./DetailsGraph"
 
     export default {
         name: "EventDetails",
         components: {
             EventMap,
+            DetailsGraph,
         },
         data() {
             return {
@@ -134,6 +136,9 @@
     }
     .backLink:hover {
         background-color: #bababa;
+    }
+    .small{
+        max-width: 50px;
     }
 
 </style>
