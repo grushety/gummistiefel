@@ -1,5 +1,5 @@
 <template>
-    <div class="startPage">
+    <div class="oldStartPage">
         <div class="tabPanel">
             <h1 class="title">Event list</h1>
             <p class="tab" :class="showTable? 'selected': ''" @click="setShowTable">All data</p>

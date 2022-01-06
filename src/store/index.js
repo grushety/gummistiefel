@@ -7,6 +7,7 @@ Vue.use(Vuex);
 const store = new Vuex.Store({
   namespaced: true,
   state: {
+    // for DEMO
     events: [],
     selectedEvent: [],
     selectedEventCoordinates: [],
@@ -19,6 +20,12 @@ const store = new Vuex.Store({
     length: "20,100",
     severity: "",
     area: "",
+    //for DEMO
+
+    //START
+    strongEventsFilter : {maxPrec: 10},
+    extremEventsFilter: {severity: 0.2, area: 3, duration: 10},
+
   },
   mutations: {
     setEvents(state, events){
@@ -44,7 +51,17 @@ const store = new Vuex.Store({
     },
     setArea(state, a){
       state.area=a;
-    }
+    },
+    //MUTATION START
+    setStrongEventsFilter(state, filter){
+      this.state.strongEventsFilter = filter;
+      functions.setFilters(filter, "STRONG")
+    },
+
+    setExtremEventsFilter(state, filter){
+      this.state.extremEventsFilter = filter;
+      functions.setFilters(filter, "EXTREM")
+    },
   },
   actions: {
     async getEvents({commit,state}){
@@ -94,6 +111,15 @@ const store = new Vuex.Store({
     },
     setArea({commit}, a){
       commit('setArea', a)
+    },
+
+    //START
+    //START
+    updateStrongEventsFilters({commit}, filters){
+      commit('setStrongEventsFilter', filters);
+    },
+    updateExtremEventsFilters({commit}, filters){
+      commit('setExtremEventsFilter', filters)
     }
   },
   modules: {

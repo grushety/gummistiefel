@@ -5,9 +5,14 @@ Vue.use(VueRouter);
 
 const routes = [
     {
-        path: '/',
+        path: "/",
+        name: "Home",
+        component: () => import("@/views/StartPage.vue")
+    },
+    {
+        path: '/oldStartPage',
         name: 'Events',
-        component: () => import("@/components/StartPage.vue"),
+        component: () => import("@/components/OldStartPage.vue"),
     },
 
     {

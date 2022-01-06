@@ -2,6 +2,7 @@ import Vue from 'vue'
 import App from './App.vue'
 import store from './store'
 import router from "./router"
+import '@/plugins/apexcharts'
 
 Vue.config.productionTip = false;
 import * as VueGoogleMaps from "vue2-google-maps" // Import package

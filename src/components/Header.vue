@@ -1,8 +1,12 @@
 <template>
-    <div class = "header">
+    <div class="header">
         <img id="logo" src="../assets/hu-logo.jpg" title="logo" :alt="'logo'">
         <div class="header-title">
             <h3 class="title">Visual representation of the "Gummistiefel" project </h3>
+        </div>
+        <div class="buttonLink">
+            <router-link class="backLink" to="/oldStartPage"> Go to old demo</router-link>
+            <router-link class="backLink" to="/"> Go new version</router-link>
         </div>
     </div>
 </template>
@@ -19,6 +23,7 @@
         top: 0;
         left: 0;
         display: inline-flex;
+        justify-content: space-between;
         padding: 16px;
         width: 100%;
         background-color: #ECEFF1;
@@ -37,4 +42,10 @@
         border-radius: 50%;
     }
 
+    a{
+        border: solid 1px black;
+        padding: 4px;
+        text-decoration: none;
+        color: black
+    }
 </style>
