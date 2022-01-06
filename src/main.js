@@ -24,6 +24,10 @@ Vue.component('line-chart', {
             default: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
         },
         datasets: Array,
+		options: {
+			type: Object,
+			default: null
+		}
     },
     watch: {
         'datasets.length'() {
@@ -31,17 +35,25 @@ Vue.component('line-chart', {
         },
         'labels.length'(){
             this.renderChartData()
-        }
+        },
+        options: {
+			deep: true,
+			handler(){
+				console.log("watchaaa", this.options)
+				this.renderChartData()
+			}
+		}
     },
     mounted() {
         this.renderChartData()
     },
     methods: {
         renderChartData() {
+			console.log(this.options)
             this.renderChart({
                 labels: this.labels,
                 datasets: this.datasets,
-            }, {responsive: true, maintainAspectRatio: false})
+            }, { responsive: true, maintainAspectRatio: false, ...this.options })
         }
     }
 

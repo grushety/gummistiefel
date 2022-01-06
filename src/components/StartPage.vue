@@ -2,8 +2,10 @@
     <div class="startPage">
         <div class="tabPanel">
             <h1 class="title">Event list</h1>
-            <p class="tab" :class="showTable? 'selected': ''" @click="setShowTable">All data</p>
-            <p class="tab" :class="showGraphs? 'selected': ''" @click="setShowGraphs">Graphs</p>
+            <p v-for="showOption in showOptions" :key="showOption.key" class="tab" 
+                :class="show == showOption.key ? 'selected' : ''" 
+                @click="show = showOption.key"
+            >{{ showOption.label }}</p>
             <p class="totalSize">Total number of events : {{events.length}}</p>
         </div>
         <div class="filterPanel">
@@ -22,7 +24,7 @@
             </div>
             <button  class="filterButton" @click="setFilters">Search</button>
         </div>
-        <div v-if="showTable" class="eventBox center">
+        <div v-if="show == 'table'" class="eventBox center">
             <table id="firstTable" align="center">
                 <thead>
                 <tr>
@@ -44,8 +46,11 @@
                 </tbody>
             </table>
         </div>
-        <div v-if="showGraphs">
+        <div v-if="show == 'graph'">
             <Graphs :events="events"></Graphs>
+        </div>
+        <div v-if="show == 'map'">
+            <Map :events="events"></Map>
         </div>
     </div>
 </template>
@@ -54,6 +59,7 @@
     import {mapState, mapActions} from "vuex";
     import router from "../router";
     import Graphs from "./Graphs"
+    import Map from "./Map"
 
     export default {
         name: 'StartPage',
@@ -62,11 +68,16 @@
         },
         components: {
             Graphs,
+            Map
         },
         data() {
             return {
-                showTable: true,
-                showGraphs: false,
+                showOptions: [
+                    {key: 'table', label: 'All data'},
+                    {key: 'graph', label: 'Graphs'},
+                    {key: 'map', label: 'Map'},
+                ],
+                show: 'table',
                 lengthFilter: "20,100",
                 severityFilter: "",
                 areaFilter: "",
@@ -88,6 +99,10 @@
                 this.showGraphs = false;
             },
             setShowGraphs() {
+                this.showTable = false;
+                this.showGraphs = true;
+            },
+            setShowMap() {
                 this.showTable = false;
                 this.showGraphs = true;
             },
