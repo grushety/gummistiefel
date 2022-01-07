@@ -19,7 +19,7 @@
             isEnabled: Boolean,
             minValue: Number,
             maxValue: Number,
-            defaultValue: Number,
+            defaultValue: [Number, String],
             title: String,
             step:{
                 type:Number,
@@ -46,7 +46,7 @@
     .range-slider{
         display: flex;
         justify-content: flex-start;
-        align-content: start;
+        align-content: flex-start;
     }
     .currentData{
         display: inline-flex;

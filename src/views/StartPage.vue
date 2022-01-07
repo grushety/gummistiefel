@@ -81,8 +81,4 @@
     .selected {
         background-color: lightgreen;
     }
-    .chart{
-        display: flex;
-        justify-content: center;
-    }
 </style>

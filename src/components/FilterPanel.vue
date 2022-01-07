@@ -113,16 +113,16 @@
             setFilters() {
                 let filters = {};
                 if (this.precEnabled) {
-                    filters['maxPrec'] = this.precValue;
+                    filters['maxPrec'] = Number(this.precValue);
                 }
                 if (this.severityEnabled) {
-                    filters['severity'] = this.severityValue;
+                    filters['severity'] = Number(this.severityValue);
                 }
                 if (this.areaEnabled) {
-                    filters['area'] = this.areaValue;
+                    filters['area'] = Number(this.areaValue);
                 }
                 if (this.durationEnabled) {
-                    filters['duration'] = this.durationValue;
+                    filters['duration'] = Number(this.durationValue);
                 }
                 if (this.type === "strong") {
                     this.updateStrongEventsFilters(filters)

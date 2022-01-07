@@ -91,7 +91,7 @@
         margin: 0 4px;
         border: 2px solid lightgreen;
         border-radius: 4px;
-        max-height: 36px;
+        min-height: 36px;
         background-color: rgba(144, 238, 144, 0.24)
     }
     button:hover {
@@ -125,6 +125,12 @@
         box-shadow: none;
         outline: none;
         border: 2px solid #8a8a8a;
+    }
+
+    .controlPanel{
+        background: lightgoldenrodyellow;
+        border: solid 1px palegoldenrod;
+        padding: 8px;
     }
 
 
