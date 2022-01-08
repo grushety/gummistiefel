@@ -1,19 +1,39 @@
 <template>
     <div class="map-wrapper">
-        <gmap-map
-                :zoom="zoom"
-                :center="center"
-                ref="map"
-                @zoom_changed="z => { zoom = z }"
-                style="width:100%;  height: 500px;">
-            <gmap-marker
-                    :key="index"
-                    v-for="(marker, index) in markers"
-                    :position="marker.pos"
-                    :icon="marker.icon"
-                    @click="center=marker.pos"
-            ></gmap-marker>
-        </gmap-map>
+        <button style="margin-bottom:1em" @click="compareView = !compareView">{{ compareView ? 'Single View' : 'Compare View'}}</button>
+        <div class="flex">
+            <gmap-map
+                    :zoom="map1.zoom"
+                    :center="center"
+                    ref="map"
+                    :style="{
+                        width: `calc(${compareView ? 50 : 100}% - 2px)`
+                    }"
+                    @zoom_changed="z => { map1.zoom = z }">
+                <gmap-marker
+                        :key="index"
+                        v-for="(marker, index) in map1.markers"
+                        :position="marker.pos"
+                        :icon="marker.icon"
+                        @click="center=marker.pos"
+                ></gmap-marker>
+            </gmap-map>
+            <gmap-map
+                    v-show="compareView"
+                    :zoom="map2.zoom"
+                    :center="center"
+                    ref="map"
+                    style="width:calc(50% - 2px)"
+                    @zoom_changed="z => { map2.zoom = z }">
+                <gmap-marker
+                        :key="index"
+                        v-for="(marker, index) in map2.markers"
+                        :position="marker.pos"
+                        :icon="marker.icon"
+                        @click="center=marker.pos"
+                ></gmap-marker>
+            </gmap-map>
+        </div>
         <div class="time-control">
             <div class="play-button-outer">
                 <div class="play-button"></div>
@@ -32,9 +52,16 @@ export default {
         //events: Array
     },
     data: () => ({
-        markers: [],
-        zoom: 4,
+        map1: {
+            zoom: 4,
+            markers: []
+        },
+        map2: {
+            zoom: 4,
+            markers: []
+        },
         playing: false,
+        compareView: false,
         zoomFactors: {
             // values according to https://stackoverflow.com/a/26966583/5062828
             20 : 1128.497220,
@@ -76,9 +103,12 @@ export default {
         }
     },
     watch: {
-        zoom() {
-            this.onZoomChanged();
-        }
+        "map1.zoom"() {
+            this.onZoomChanged(1);
+        },
+        "map2.zoom"() {
+            this.onZoomChanged(2);
+        },
     },
     created() {
         // dummy data
@@ -133,13 +163,14 @@ export default {
 
         this.icon = 'data:image/svg+xml;base64,' + window.btoa(new XMLSerializer().serializeToString(svg));
         
-        this.onZoomChanged(this.zoom);
+        this.onZoomChanged(1);
+        this.onZoomChanged(2);
     },
     methods: {
         play() {},
-        onZoomChanged() {
-            this.markers = this.events.map(event => {
-                const radius = event.area/this.zoomFactors[this.zoom]*10000000000;
+        onZoomChanged(mapIndex) {
+            this[`map${mapIndex}`].markers = this.events.map(event => {
+                const radius = event.area/this.zoomFactors[this[`map${mapIndex}`].zoom]*10000000000;
 
                 const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                 svg.setAttribute('width', radius*2);
@@ -172,10 +203,19 @@ export default {
 </script>
 
 <style scoped>
+.flex {
+    display: flex;
+}
+
+.vue-map-container {
+    height: 500px;
+    border: 1px solid black;
+}
+
 .map-wrapper{
     padding: 24px;
     margin: 16px auto;
-    width: 1000px;
+    width: 1200px;
 }
 
 .time-control {
