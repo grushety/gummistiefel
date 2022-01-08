@@ -1,9 +1,10 @@
 <template>
     <div class="map-wrapper">
         <gmap-map
-                :zoom="4"
+                :zoom="zoom"
                 :center="center"
                 ref="map"
+                @zoom_changed="z => { zoom = z }"
                 style="width:100%;  height: 500px;">
             <gmap-marker
                     :key="index"
@@ -32,7 +33,31 @@ export default {
     },
     data: () => ({
         markers: [],
-        playing: false
+        zoom: 4,
+        playing: false,
+        zoomFactors: {
+            // values according to https://stackoverflow.com/a/26966583/5062828
+            20 : 1128.497220,
+            19 : 2256.994440,
+            18 : 4513.988880,
+            17 : 9027.977761,
+            16 : 18055.955520,
+            15 : 36111.911040,
+            14 : 72223.822090,
+            13 : 144447.644200,
+            12 : 288895.288400,
+            11 : 577790.576700,
+            10 : 1155581.153000,
+            9  : 2311162.307000,
+            8  : 4622324.614000,
+            7  : 9244649.227000,
+            6  : 18489298.450000,
+            5  : 36978596.910000,
+            4  : 73957193.820000,
+            3  : 147914387.600000,
+            2  : 295828775.300000,
+            1  : 591657550.500000
+        }
     }),
     computed: {
         center() {
@@ -48,6 +73,11 @@ export default {
                 lat: (maxLat - minLat) / 2 + minLat,
                 lng: (maxLng - minLng) / 2 + minLng
             }
+        }
+    },
+    watch: {
+        zoom() {
+            this.onZoomChanged();
         }
     },
     created() {
@@ -102,39 +132,41 @@ export default {
         svg.appendChild(circle);
 
         this.icon = 'data:image/svg+xml;base64,' + window.btoa(new XMLSerializer().serializeToString(svg));
-        console.log(this.icon)
-
-        this.markers = this.events.map(event => {
-            const radius = event.area*100;
-
-            const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
-            svg.setAttribute('width', radius*2);
-            svg.setAttribute('height', radius*2);
-            const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
-            circle.setAttributeNS(null, "cx", radius);
-            circle.setAttributeNS(null, "cy", radius);
-            circle.setAttributeNS(null, "r", radius);
-            circle.setAttributeNS(null, "fill", "blue");
-            circle.setAttributeNS(null, "fill-opacity", event.si);
-            circle.setAttributeNS(null, "stroke", "none");
-            svg.appendChild(circle);
-
-            const icon = {
-                url: 'data:image/svg+xml;base64,' + window.btoa(new XMLSerializer().serializeToString(svg)),
-                anchor: {x: radius, y: radius}
-            }
-
-            return {
-                pos: {
-                    lat: event.lat,
-                    lng: event.lng
-                },
-                icon
-            };
-        })
+        
+        this.onZoomChanged(this.zoom);
     },
     methods: {
-        play() {}
+        play() {},
+        onZoomChanged() {
+            this.markers = this.events.map(event => {
+                const radius = event.area/this.zoomFactors[this.zoom]*10000000000;
+
+                const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+                svg.setAttribute('width', radius*2);
+                svg.setAttribute('height', radius*2);
+                
+                const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
+                circle.setAttributeNS(null, "cx", radius);
+                circle.setAttributeNS(null, "cy", radius);
+                circle.setAttributeNS(null, "r", radius);
+                circle.setAttributeNS(null, "fill", "blue");
+                circle.setAttributeNS(null, "fill-opacity", event.si);
+                circle.setAttributeNS(null, "stroke", "none");
+                
+                svg.appendChild(circle);
+
+                return {
+                    pos: {
+                        lat: event.lat,
+                        lng: event.lng
+                    },
+                    icon: {
+                        url: 'data:image/svg+xml;base64,' + window.btoa(new XMLSerializer().serializeToString(svg)),
+                        anchor: {x: radius, y: radius}
+                    }
+                };
+            });
+        }
     }
 }
 </script>
