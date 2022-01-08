@@ -62,8 +62,8 @@
             return {
                 selectedType: 'years',
                 selectedNumber: '12',
-                firstTimespan: 'test',
-                secondTimespan: 'test',
+                firstTimespan: '01 Jan 1980 - 01 Jan 1992',
+                secondTimespan: '01 Jan 2000 - 01 Jan 2012',
                 editingFirst: false,
                 editingLast:false,
                 selectedDate: new Date('1971, 1,  1'),
@@ -108,23 +108,23 @@
                 this.secondTimespan = "";
             },
             calculateEndDate(startDate) {
-                console.log("Start string " + startDate)
-                let start = new Date(startDate)
-                console.log("Start date " + start)
+                console.log("Start string " + startDate);
+                let start = new Date(startDate);
+                console.log("Start date " + start);
                 let end = null;
                 if (this.selectedType === 'years') {
-                    end = start.setFullYear(start.getFullYear() + this.selectedNumber)
-                    console.log("End date " + end)
+                    end = start.setFullYear(start.getFullYear() + this.selectedNumber);
+                    console.log("End date " + end);
                     return end;
                 }
                 if (this.selectedType === "months") {
-                    end = start.setMonth(start.getMonth() + this.selectedNumber)
-                    console.log("End date " + end)
+                    end = start.setMonth(start.getMonth() + this.selectedNumber);
+                    console.log("End date " + end);
                     return end;
                 }
                 if (this.selectedType === "days") {
-                    end = start.setDate(start.getDate() + this.selectedNumber)
-                    console.log("End date " + end)
+                    end = start.setDate(start.getDate() + this.selectedNumber);
+                    console.log("End date " + end);
                     return end;
                 }
             },
@@ -133,7 +133,7 @@
             },
             editSecond() {
 
-            }
+            },
         }
     }
 </script>
@@ -186,11 +186,15 @@
 
     .gridWrapper {
         display: grid;
-        grid-template-columns: 150px 150px 50px 40px;
+        grid-template-columns: 150px 190px 30px 30px;
+        justify-items: center;
+        align-items: center;
     }
 
     .timespanInput{
-        margin:0;
-        padding:0;
+        padding: 4px;
+    }
+    .fa-pencil-alt{
+
     }
 </style>

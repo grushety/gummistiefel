@@ -7,9 +7,6 @@
 
 <style scoped>
     .footer {
-        position: sticky;
-        left: 0;
-        bottom: 0;
         width: 100%;
         background-color: #ECEFF1;
         height: 50px;

@@ -1,7 +1,7 @@
 <template>
     <div id="app">
         <Header/>
-        <div class="page">
+        <div class="page wrapper">
             <router-view></router-view>
         </div>
         <Footer/>
@@ -31,6 +31,13 @@
         color: #455A64;
         text-align: center;
         }
+    html, body {
+        height: 100%;
+    }
+    .wrapper {
+        min-height: calc(100vh - 120px);
+        margin: 0 auto -50px;
+    }
 
     table {
         font-family: 'Open Sans', sans-serif;

@@ -143,7 +143,7 @@
         display: flex;
         flex-direction: column;
         border: 2px solid lightgreen;
-        width: 480px;
+        width: 500px;
         border-radius: 4px;
         margin: 4px;
         padding-bottom: 36px;

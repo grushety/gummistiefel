@@ -15,7 +15,8 @@
 
         </div>
         <div class="maps">
-            Hier kommen die Karte dran
+            <Map></Map>
+            <Map></Map>
         </div>
         <div class="compareGraphs">
             <ChartComparison/>
@@ -29,6 +30,7 @@
     import MainChart from "../components/charts/MainChart"
     import MaxValueChart from "../components/charts/MaxValueChart";
     import ChartComparison from "../components/charts/ChartComparison";
+    import Map from "../components/Map";
 
     export default {
         name: "StartPage",
@@ -37,6 +39,7 @@
             MainChart,
             MaxValueChart,
             ChartComparison,
+            Map,
         },
         data() {
             return{
@@ -93,6 +96,13 @@
     }
     .selected {
         background-color: lightgreen;
+    }
+    .maps{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .compareGraphs{
+        padding-bottom: 16px;
     }
 
 </style>
