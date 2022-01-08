@@ -97,15 +97,9 @@ export default {
             const maxLng = Math.max(...lngs);
             const maxLat = Math.max(...lats);
 
-                const minLng = Math.min(...lngs);
-                const minLat = Math.min(...lats);
-                const maxLng = Math.max(...lngs);
-                const maxLat = Math.max(...lats);
-
-                return {
-                    lat: (maxLat - minLat) / 2 + minLat,
-                    lng: (maxLng - minLng) / 2 + minLng
-                }
+            return {
+                lat: (maxLat - minLat) / 2 + minLat,
+                lng: (maxLng - minLng) / 2 + minLng
             }
         }
     },
@@ -206,6 +200,7 @@ export default {
             });
         }
     }
+}
 </script>
 
 <style scoped>
