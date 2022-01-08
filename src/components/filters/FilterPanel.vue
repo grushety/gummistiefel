@@ -146,13 +146,13 @@
         width: 480px;
         border-radius: 4px;
         margin: 4px;
-        padding-bottom: 20px;
+        padding-bottom: 36px;
         position: relative;
     }
 
     button {
         width: 80px;
-        padding: 4px 8px;
+        padding: 2px 8px;
         border: 2px solid #bababa;
         border-radius: 1px;
         max-height: 24px;
@@ -165,6 +165,6 @@
     .filterDescription{
         padding:4px;
         font-weight: 600;
-        font-size: 12px;
+        font-size: 14px;
     }
 </style>

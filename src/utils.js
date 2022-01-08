@@ -1,5 +1,5 @@
 export default {
-    newBubbleOptions(){
+    newBubbleOptions() {
         return {
             chart: {
                 type: 'bubble',
@@ -20,25 +20,17 @@ export default {
                     customIcons: []
                 },
             },
-
-            dataLabels: {
-                enabled: true
-            },
             xaxis: {
                 type: 'datetime',
                 tickAmount: 12,
             },
-            tooltip: {
-                x: {
-                    format: 'dd MMM yyyy'
-                }
-            },
-
-
+            yaxis: {
+                max: 90,
+            }
         };
     },
 
-    newStackedHistogramOptions(){
+    newStackedHistogramOptions() {
         return {
             chart: {
                 type: 'bar',
@@ -60,8 +52,7 @@ export default {
                 },
                 zoom: {
                     enabled: true
-                }
-
+                },
             },
             active: {
                 allowMultipleDataPointsSelection: true,
@@ -70,8 +61,9 @@ export default {
                 colors: ['#5fbce9', '#f81d16']
             },
             xaxis: {
-                categories: ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
-            }
+                type: 'category',
+                tickAmount: 12,
+            },
         }
     },
 
@@ -80,20 +72,27 @@ export default {
     },
 
     getExampleDates() {
-        return  ['03 Jan 2000 GMT', '05 Jan 2000 GMT', '09 Jan 2000 GMT', '12 Jan 2000 GMT', '17 Jan 2000 GMT', '21 Jan 2000 GMT', '22 Jan 2000 GMT', '25 Jan 2000 GMT', '29 Jan 2000 GMT', '31 Jan 2000 GMT'];
+        return ['03 Jan 2000 GMT', '05 Jan 2000 GMT', '09 Jan 2000 GMT', '12 Jan 2000 GMT', '17 Jan 2000 GMT', '21 Jan 2000 GMT', '22 Jan 2000 GMT', '25 Jan 2000 GMT', '29 Jan 2000 GMT', '31 Jan 2000 GMT'];
 
     },
 
-    generateDataForAllYears() {
+    getAllYears() {
         let years = [];
+        for (let i = 1979; i < 2018; i++) {
+            years.push(String(i));
+        }
+        return years;
+    },
+
+    generateDataForAllYears() {
         let dataStrongEvents = [];
         let dataExtremEvents = [];
         for (let i = 1979; i < 2018; i++) {
-            years.push(i);
             dataStrongEvents.push(this.getRandomArbitrary(0, 50));
             dataExtremEvents.push(this.getRandomArbitrary(0, 30));
         }
-        return {years: years, strong: dataStrongEvents, extrem: dataExtremEvents}
+        return [{name: 'Starkereignisse', data: dataStrongEvents,  color: '#5fbce9'},
+                {name: 'Extremereignisse', data: dataExtremEvents, color: '#f81d16'}, ]
     },
 
     generateDataForMonths() {
@@ -110,7 +109,7 @@ export default {
 
     generateDataForDays(dates) {
         let series = [
-            {name: "siTo1", data: [], color:'#FBE5E5'},
+            {name: "siTo1", data: [], color: '#FBE5E5'},
             {name: "siTo2", data: [], color: '#F5C3C3'},
             {name: "siTo3", data: [], color: '#EFA1A1'},
             {name: "siTo4", data: [], color: '#DC6160'},
@@ -127,8 +126,8 @@ export default {
             console.log(new Date(item).getTime())
             let si = (this.getRandomArbitrary(0, 9))
             oneData.push(new Date(item).getTime())
-            oneData.push(this.getRandomArbitrary(0,80))
-            oneData.push(this.getRandomArbitrary(10, 30));
+            oneData.push(this.getRandomArbitrary(0, 80))
+            oneData.push(this.getRandomArbitrary(0, 20));
             series[si].data.push(oneData);
         });
         console.log(series);

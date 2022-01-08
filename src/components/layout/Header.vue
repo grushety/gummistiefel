@@ -1,12 +1,14 @@
 <template>
     <div class="header">
-        <img id="logo" src="../assets/hu-logo.jpg" title="logo" :alt="'logo'">
-        <div class="header-title">
-            <h3 class="title">Visual representation of the "Gummistiefel" project </h3>
+        <div class="left">
+            <img id="logo" src="../../assets/hu-logo.jpg" title="logo" :alt="'logo'">
+            <div class="header-title">
+                <h3 class="title">Visual representation of the "Gummistiefel" project</h3>
+            </div>
         </div>
         <div class="buttonLink">
-            <router-link class="backLink" to="/oldStartPage"> Go to old demo</router-link>
-            <router-link class="backLink" to="/"> Go new version</router-link>
+            <router-link class="backLink" to="/oldStartPage">Go to old demo</router-link>
+            <router-link class="backLink" to="/">Go new version</router-link>
         </div>
     </div>
 </template>
@@ -27,7 +29,6 @@
         padding: 16px;
         width: 100%;
         background-color: #ECEFF1;
-        align-items: center;
     }
 
     .title {
@@ -42,10 +43,14 @@
         border-radius: 50%;
     }
 
-    a{
-        border: solid 1px black;
+    a {
+        border: solid 1px lightcyan;
         padding: 4px;
         text-decoration: none;
         color: black
+    }
+    .left{
+        display: flex;
+        align-items: center;
     }
 </style>

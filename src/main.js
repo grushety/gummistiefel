@@ -3,11 +3,12 @@ import App from './App.vue'
 import store from './store'
 import router from "./router"
 import '@/plugins/apexcharts'
+import '@fortawesome/fontawesome-free/css/all.css'
+import '@fortawesome/fontawesome-free/js/all.js'
+
 
 Vue.config.productionTip = false;
 import * as VueGoogleMaps from "vue2-google-maps" // Import package
-
-Vue.config.productionTip = false;
 
 Vue.use(VueGoogleMaps, {
     load: {
@@ -15,6 +16,11 @@ Vue.use(VueGoogleMaps, {
         libraries: "places"
     }
 });
+
+import VueSimpleAlert from "vue-simple-alert";
+
+Vue.use(VueSimpleAlert);
+
 import {Line} from 'vue-chartjs';
 Vue.component('line-chart', {
     extends: Line,

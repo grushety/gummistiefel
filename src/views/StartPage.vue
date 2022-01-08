@@ -7,25 +7,28 @@
         <div class="tabs">
             <p class="tab" :class="showMainGraph? 'selected': ''" @click="setShowMain">Main Graph</p>
             <p class="tab" :class="showKMaxGraph? 'selected': ''" @click="setShowKMax">K- Exteme Ereignisse Graph</p>
+            <p class="tab" :class="showBoxPlot? 'selected': ''" @click="setShowBoxPlot">K- BoxPlot </p>
         </div>
         <div class="chart">
             <MainChart v-if="showMainGraph"/>
             <MaxValueChart v-if="showKMaxGraph"/>
+
         </div>
         <div class="maps">
             Hier kommen die Karte dran
         </div>
         <div class="compareGraphs">
-            Hier kommen die Graphen zu vergleichen
+            <ChartComparison/>
         </div>
     </div>
 </template>
 
 <script>
     import {mapState} from "vuex";
-    import FilterPanel from "../components/FilterPanel";
-    import MainChart from "../components/MainChart"
-    import MaxValueChart from "../components/MaxValueChart";
+    import FilterPanel from "../components/filters/FilterPanel";
+    import MainChart from "../components/charts/MainChart"
+    import MaxValueChart from "../components/charts/MaxValueChart";
+    import ChartComparison from "../components/charts/ChartComparison";
 
     export default {
         name: "StartPage",
@@ -33,11 +36,13 @@
             FilterPanel,
             MainChart,
             MaxValueChart,
+            ChartComparison,
         },
         data() {
             return{
                 showMainGraph:true,
                 showKMaxGraph:false,
+                showBoxPlot:false,
             }
         },
         computed: {
@@ -47,10 +52,18 @@
             setShowMain(){
                 this.showMainGraph=true;
                 this.showKMaxGraph=false;
+                this.showBoxPlot = false;
+
             },
             setShowKMax(){
                 this.showMainGraph=false;
                 this.showKMaxGraph=true;
+                this.showBoxPlot = false;
+            },
+            setShowBoxPlot(){
+                this.showMainGraph=false;
+                this.showKMaxGraph=false;
+                this.showBoxPlot = true;
             }
         }
     }
@@ -81,4 +94,5 @@
     .selected {
         background-color: lightgreen;
     }
+
 </style>

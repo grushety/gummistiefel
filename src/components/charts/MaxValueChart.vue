@@ -7,7 +7,7 @@
         <div class="chart">
         <apexchart
                 ref="maxChart"
-                width="500"
+                width="700"
                 :options="options" :series="series">
         </apexchart>
         </div>
@@ -15,7 +15,7 @@
 </template>
 
 <script>
-    import utils from "../utils";
+    import utils from "../../utils";
     export default {
         name: "MaxValueChart",
         data() {
@@ -60,6 +60,5 @@
     label{
         font-weight: 600;
         font-size: 14px;
-        margin-bottom: 8px ;
     }
 </style>
