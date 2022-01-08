@@ -28,7 +28,7 @@
         },
         computed: {
             centerIndex() {
-                return this.items.length?~~(this.items.length/2) : 0;
+                return this.items.length? ~~(this.items.length/2) : 0;
             },
             center(){
                 console.log(this.centerIndex)

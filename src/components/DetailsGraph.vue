@@ -14,7 +14,7 @@
                 <label for="area">Area</label>
             </div>
         </div>
-        <line-chart :labels="labels" :datasets="datasets"></line-chart>
+        <line-chart :labels="labels" :datasets="datasets" :options="options"></line-chart>
     </div>
 </template>
 
@@ -29,7 +29,14 @@
                 showLength: false,
                 showSeverity: false,
                 showArea: false,
-                datasets: []
+                datasets: [],
+				options: {
+					scales: {
+						yAxes: [{
+							stacked: true
+						}]
+					}
+				}
             }
         },
         computed: {
