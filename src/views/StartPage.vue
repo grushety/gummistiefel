@@ -12,6 +12,7 @@
         <div class="chart">
             <MainChart v-if="showMainGraph"/>
             <MaxValueChart v-if="showKMaxGraph"/>
+            <BoxPlotChart v-if="showBoxPlot"/>
 
         </div>
         <div class="maps">
@@ -29,6 +30,7 @@
     import FilterPanel from "../components/filters/FilterPanel";
     import MainChart from "../components/charts/MainChart"
     import MaxValueChart from "../components/charts/MaxValueChart";
+    import BoxPlotChart from "../components/charts/BoxPlotChart";
     import ChartComparison from "../components/charts/ChartComparison";
     import Map from "../components/Map";
 
@@ -39,6 +41,7 @@
             MainChart,
             MaxValueChart,
             ChartComparison,
+            BoxPlotChart,
             Map,
         },
         data() {

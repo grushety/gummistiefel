@@ -1,7 +1,7 @@
 <template>
     <div class="mainChart">
         <div class="controlPanel">
-            <button @click="changeToYearView" :disabled="type==='years'">Zurück zur Gesamtübersicht</button>
+            <button v-if="type==='years'" @click="changeToYearView">Zurück zur Gesamtübersicht</button>
             <div  class="panelItem">
             <label>
                 <input type="checkbox" :checked="extremOnly" @input="showExtremEreignisse">

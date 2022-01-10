@@ -67,6 +67,32 @@ export default {
         }
     },
 
+    newBoxPlotOptions() {
+        return {
+            chart: {
+                type: 'boxPlot',
+            },
+            colors: ['#008FFB', '#FEB019'],
+            title: {
+                text: 'BoxPlot - Scatter Chart',
+                align: 'left'
+            },
+            xaxis: {
+                type: 'datetime',
+                tooltip: {
+                    formatter: function(val) {
+                        return new Date(val).getFullYear()
+                    }
+                }
+            },
+            tooltip: {
+                shared: false,
+                intersect: true
+            }
+        }
+    },
+
+
     getAllMonth() {
         return ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"]
     },
@@ -142,4 +168,101 @@ export default {
     getRandomArbitraryFloat(min, max) {
         return Math.random() * (max - min) + min;
     },
+
+    getBoxplotSeries() {
+        return [
+            {
+                name: 'box',
+                type: 'boxPlot',
+                data: [
+                    {
+                        x: new Date('2017-01-01').getTime(),
+                        y: [54, 66, 69, 75, 88]
+                    },
+                    {
+                        x: new Date('2018-01-01').getTime(),
+                        y: [43, 65, 69, 76, 81]
+                    },
+                    {
+                        x: new Date('2019-01-01').getTime(),
+                        y: [31, 39, 45, 51, 59]
+                    },
+                    {
+                        x: new Date('2020-01-01').getTime(),
+                        y: [39, 46, 55, 65, 71]
+                    },
+                    {
+                        x: new Date('2021-01-01').getTime(),
+                        y: [29, 31, 35, 39, 44]
+                    }
+                ]
+            },
+        ]
+    },
+    getBoxplotSeriesForYears(filter){
+        let min=0;
+        let max=100;
+        if(filter==="area"){
+            min=4
+            max=80
+        }
+        if(filter==="duration"){
+            min=0
+            max=100
+        }
+        if(filter==="severity"){
+            min=0
+            max=1
+        }
+        let years = this.getAllYears();
+        let data=[];
+        years.forEach(item => {
+            let obj = {};
+            obj.x=new Date(item);
+            obj.y= this.generateRandomNumbersForBoxPlot(min, max)
+            data.push(obj)
+        });
+        return [{
+            name: 'box',
+            type: 'boxPlot',
+            data: data,
+        }]
+    },
+    getBoxplotSeriesForMonths(year, filter){
+        let min=0;
+        let max=100;
+        if(filter==="area"){
+            min=4
+            max=80
+        }
+        if(filter==="duration"){
+            min=0
+            max=100
+        }
+        if(filter==="severity"){
+            min=0
+            max=1
+        }
+        let data = [];
+        let months = this.getAllMonth();
+        months.forEach(item => {
+            let obj = {};
+            obj.x=new Date( "01 " + item + " " + year);
+            obj.y= this.generateRandomNumbersForBoxPlot(min, max)
+            data.push(obj)
+        });
+        return [{
+            name: 'box',
+            type: 'boxPlot',
+            data: data,
+        }]
+    },
+    generateRandomNumbersForBoxPlot(min, max){
+        let unsorted = [];
+        for (let i=0; i<5; i++){
+            let number = this.getRandomArbitrary(min, max)
+            unsorted.push(number)
+        }
+        return unsorted.sort(function(a, b){return a-b});
+    }
 }

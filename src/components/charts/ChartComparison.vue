@@ -3,14 +3,24 @@
         <div class="timespanConfiguration">
             <div class="selectedTimespans param">
                 <div class="gridWrapper">
-                    <div class="timespan"> Erste Zeitspanne: </div>
-                    <input class="timespanInput" v-model="firstTimespan" readonly/>
-                    <i class="fa fa-pencil-alt" @click="editFirst" aria-hidden="true"></i>
-                    <i class="fa fa-times" @click="removeFirstTimespan" aria-hidden="true"></i>
+                    <div class="timespan"> Erste Zeitspanne:</div>
+
+                    <input class="timespanInput" :class="{'selected': editingFirst}" v-model="firstTimespan" readonly/>
+
+                    <div @click="editFirst()">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                    </div>
+                    <div @click="removeFirstTimespan()">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
                     <div class="timespan"> Zwiete Zeitspanne:</div>
-                    <input class="timespanInput" v-model="secondTimespan" readonly />
-                    <i class="fa fa-pencil-alt" @click="editSecond" aria-hidden="true"></i>
-                    <i class="fa fa-times" @click="removeSecondTimespan" aria-hidden="true"></i>
+                        <input class="timespanInput" :class="{'selected': editingLast}" v-model="secondTimespan" readonly/>
+                    <div @click="editSecond()">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                    </div>
+                    <div @click="removeSecondTimespan()">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
                 </div>
             </div>
             <div class="timeConfigPanel">
@@ -29,7 +39,7 @@
                 </div>
                 <div class="datePicker param">
                     <label>Startdatum für Periode auswählen </label>
-                    <DatePicker v-model="selectedDate" @selected="changeStartDate"/>
+                    <DatePicker v-model="selectedDate" @selected="changeStartDate" :minimum-view="selectedType" />
                 </div>
             </div>
         </div>
@@ -60,17 +70,17 @@
         },
         data() {
             return {
-                selectedType: 'years',
+                selectedType: 'year',
                 selectedNumber: '12',
-                firstTimespan: '01 Jan 1980 - 01 Jan 1992',
-                secondTimespan: '01 Jan 2000 - 01 Jan 2012',
+                firstTimespan: 'Jan 01 1980 - Jan 01 1992',
+                secondTimespan: 'Jan 01 2000 - Jan 01 2012',
                 editingFirst: false,
-                editingLast:false,
+                editingLast: false,
                 selectedDate: new Date('1971, 1,  1'),
                 options: [
-                    {id: 1, name: 'years'},
-                    {id: 2, name: 'months'},
-                    {id: 3, name: 'days'}
+                    {id: 1, name: 'year'},
+                    {id: 2, name: 'month'},
+                    {id: 3, name: 'day'}
                 ],
                 firstOptions: utils.newStackedHistogramOptions(),
                 secondOptions: utils.newStackedHistogramOptions(),
@@ -99,7 +109,9 @@
                 if (this.selectedNumber === '') {
                     this.$alert("Bitte die Anzahl der Timeintervalle angeben")
                 }
-
+                this.calculateEndDate(this.selectedDate)
+                this.editingLast = false;
+                this.editingFirst = false;
             },
             removeFirstTimespan() {
                 this.firstTimespan = "";
@@ -108,31 +120,41 @@
                 this.secondTimespan = "";
             },
             calculateEndDate(startDate) {
-                console.log("Start string " + startDate);
+                console.log(startDate)
                 let start = new Date(startDate);
-                console.log("Start date " + start);
                 let end = null;
-                if (this.selectedType === 'years') {
+                if (this.selectedType === 'year') {
                     end = start.setFullYear(start.getFullYear() + this.selectedNumber);
-                    console.log("End date " + end);
-                    return end;
                 }
-                if (this.selectedType === "months") {
+                if (this.selectedType === "month") {
                     end = start.setMonth(start.getMonth() + this.selectedNumber);
-                    console.log("End date " + end);
-                    return end;
                 }
-                if (this.selectedType === "days") {
+                if (this.selectedType === "day") {
                     end = start.setDate(start.getDate() + this.selectedNumber);
-                    console.log("End date " + end);
-                    return end;
                 }
+                let endFormated =new Date(end).toDateString().substring(4,15);
+                let startFormated =start.toDateString().substring(4,15);
+                let result = startFormated+ " - " + endFormated
+                if(!this.editingFirst && !this.editingLast){
+                    this.$alert("Bitte wählen Sie den Zeitraum zum Bearbeiten aus")
+                }
+                if(this.editingFirst){
+                    this.firstTimespan = result;
+                }
+                if(this.editingLast){
+                    this.secondTimespan= result;
+                }
+
             },
             editFirst() {
-
+                console.log("pressed editing first")
+                this.editingFirst = true;
+                this.editingLast = false;
             },
             editSecond() {
-
+                console.log("pressed editing last")
+                this.editingLast = true;
+                this.editingFirst = false;
             },
         }
     }
@@ -191,10 +213,15 @@
         align-items: center;
     }
 
-    .timespanInput{
+    .timespanInput {
         padding: 4px;
     }
-    .fa-pencil-alt{
 
+    .fa-pencil-alt {
+
+    }
+
+    .selected {
+        border-color: black;
     }
 </style>
