@@ -17,7 +17,6 @@
         </div>
         <div class="maps">
             <Map></Map>
-            <Map></Map>
         </div>
         <div class="compareGraphs">
             <ChartComparison/>
