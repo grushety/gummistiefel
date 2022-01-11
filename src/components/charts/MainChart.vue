@@ -151,6 +151,7 @@
         max-height: 24px;
         background-color: rgba(219, 219, 219, 0.24);
     }
+
     .panelItem{
         padding:16px 0;
     }

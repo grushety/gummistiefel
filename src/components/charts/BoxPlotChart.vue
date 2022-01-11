@@ -54,12 +54,16 @@
         },
         methods: {
             clickHandler(event, chartContext, config) {
-                let allYears = utils.getAllYears()
-                if (this.type === "year" && !this.selectedYear) {
-                    this.selectedYear = allYears[config.dataPointIndex];
-                    this.series = utils.getBoxplotSeriesForMonths(this.selectedYear, this.filter);
-                    this.type = "month";
-                    this.rerenderChart();
+                console.log(config)
+                console.log(event)
+                if (config.dataPointIndex!==-1) {
+                    let allYears = utils.getAllYears()
+                    if (this.type === "year" && !this.selectedYear) {
+                        this.selectedYear = allYears[config.dataPointIndex];
+                        this.series = utils.getBoxplotSeriesForMonths(this.selectedYear, this.filter);
+                        this.type = "month";
+                        this.rerenderChart();
+                    }
                 }
             },
 
@@ -104,7 +108,7 @@
             },
             changeToYearView() {
                 this.selectedYear = "";
-                this.type="year"
+                this.type = "year"
                 this.series = utils.getBoxplotSeriesForYears(this.filter)
                 this.rerenderChart();
             },

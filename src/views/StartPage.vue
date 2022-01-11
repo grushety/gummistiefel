@@ -106,5 +106,9 @@
     .compareGraphs{
         padding-bottom: 16px;
     }
+    .tab:hover {
+        cursor:pointer;
+        background-color: rgba(133, 206, 144, 0.71);
+    }
 
 </style>
