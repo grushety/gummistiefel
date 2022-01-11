@@ -91,7 +91,7 @@
     }
 
     .page {
-        padding: 8px;
+        padding: 0 8px 8px 8px;
     }
     button {
         padding: 8px 16px;

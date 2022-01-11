@@ -133,16 +133,16 @@ export default {
 
     generateDataForDays(dates) {
         let series = [
-            {name: "si<=0.1", data: [], color: '#ff8080'},
-            {name: "si<=0.2", data: [], color: '#ff6666'},
-            {name: "si<=0.3", data: [], color: '#ff3333'},
-            {name: "si<=0.4", data: [], color: '#ff1a1a'},
-            {name: "si<=0.5", data: [], color: '#ff0000'},
-            {name: "si<=0.6", data: [], color: '#cc0000'},
-            {name: "si<=0.7", data: [], color: '#990000'},
-            {name: "si<=0.8", data: [], color: '#660000'},
-            {name: "si<=0.9", data: [], color: '#330000'},
-            {name: "si<=1", data: [], color: '#1a0000'},
+            {name: "si 0-0.1", data: [], color: '#ff8080'},
+            {name: "si 0.1-0.2", data: [], color: '#ff6666'},
+            {name: "si 0.2-0.3", data: [], color: '#ff3333'},
+            {name: "si 0.3-0.4", data: [], color: '#ff1a1a'},
+            {name: "si 0.4-0.5", data: [], color: '#ff0000'},
+            {name: "si 0.5-0.6", data: [], color: '#cc0000'},
+            {name: "si 0.6-0.7", data: [], color: '#990000'},
+            {name: "si 0.7-0.8", data: [], color: '#660000'},
+            {name: "si 0.8-0.9", data: [], color: '#330000'},
+            {name: "si > 0.9", data: [], color: '#1a0000'},
         ];
         dates.forEach((item) => {
             let oneData = []

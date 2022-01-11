@@ -1,25 +1,34 @@
 <template>
     <div class="mainPage">
-        <div class="filters">
-            <FilterPanel type="strong" filter-name="Starkereignisse" :filter="strongEventsFilter"/>
-            <FilterPanel type="extrem" filter-name="Extremereignisse" :filter="extremEventsFilter"/>
+        <div class="pageTabs">
+            <p class="compareView viewTab" :class="{'selected': compareView}" @click="selectView(0)">Daten in zwei Perioden
+                vergleichen</p>
+            <p class="commonView viewTab" :class="{'selected': commonView}" @click="selectView(1)">Datenübersicht</p>
         </div>
-        <div class="tabs">
-            <p class="tab" :class="showMainGraph? 'selected': ''" @click="setShowMain">Main Graph</p>
-            <p class="tab" :class="showKMaxGraph? 'selected': ''" @click="setShowKMax">K- Exteme Ereignisse Graph</p>
-            <p class="tab" :class="showBoxPlot? 'selected': ''" @click="setShowBoxPlot">K- BoxPlot </p>
+        <div class="commonViewContent" v-if="commonView">
+            <div class="filters">
+                <FilterPanel type="strong" filter-name="Starkereignisse" :filter="strongEventsFilter"/>
+                <FilterPanel type="extrem" filter-name="Extremereignisse" :filter="extremEventsFilter"/>
+            </div>
+            <div class="tabs">
+                <p class="tab" :class="showMainGraph? 'selected': ''" @click="setShowMain">Main Graph</p>
+                <p class="tab" :class="showKMaxGraph? 'selected': ''" @click="setShowKMax">K- Exteme Ereignisse
+                    Graph</p>
+                <p class="tab" :class="showBoxPlot? 'selected': ''" @click="setShowBoxPlot">K- BoxPlot </p>
+            </div>
+            <div class="chart">
+                <MainChart v-if="showMainGraph"/>
+                <MaxValueChart v-if="showKMaxGraph"/>
+                <BoxPlotChart v-if="showBoxPlot"/>
+            </div>
+            <div class="maps">
+                <Map></Map>
+            </div>
         </div>
-        <div class="chart">
-            <MainChart v-if="showMainGraph"/>
-            <MaxValueChart v-if="showKMaxGraph"/>
-            <BoxPlotChart v-if="showBoxPlot"/>
-
-        </div>
-        <div class="maps">
-            <Map></Map>
-        </div>
-        <div class="compareGraphs">
-            <ChartComparison/>
+        <div class="compareViewContent" v-if="compareView">
+            <div class="compareGraphs">
+                <ChartComparison/>
+            </div>
         </div>
     </div>
 </template>
@@ -44,46 +53,69 @@
             Map,
         },
         data() {
-            return{
-                showMainGraph:true,
-                showKMaxGraph:false,
-                showBoxPlot:false,
+            return {
+                showMainGraph: true,
+                showKMaxGraph: false,
+                showBoxPlot: false,
+                compareView: true,
+                commonView: false,
             }
         },
         computed: {
             ...mapState(['strongEventsFilter', 'extremEventsFilter']),
         },
         methods: {
-            setShowMain(){
-                this.showMainGraph=true;
-                this.showKMaxGraph=false;
+            setShowMain() {
+                this.showMainGraph = true;
+                this.showKMaxGraph = false;
                 this.showBoxPlot = false;
 
             },
-            setShowKMax(){
-                this.showMainGraph=false;
-                this.showKMaxGraph=true;
+            setShowKMax() {
+                this.showMainGraph = false;
+                this.showKMaxGraph = true;
                 this.showBoxPlot = false;
             },
-            setShowBoxPlot(){
-                this.showMainGraph=false;
-                this.showKMaxGraph=false;
+            setShowBoxPlot() {
+                this.showMainGraph = false;
+                this.showKMaxGraph = false;
                 this.showBoxPlot = true;
-            }
+            },
+            selectView(index) {
+                if (index === 0) {
+                    this.compareView = true;
+                    this.commonView = false;
+                } else {
+                    this.compareView = false;
+                    this.commonView = true;
+                }
+            },
         }
     }
 </script>
 
 <style scoped>
-    .filters{
+    .pageTabs{
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+    .viewTab{
+        padding: 8px 0;
+        margin: 0;
+    }
+    .viewTab:hover{
+        cursor:pointer;
+    }
+    .filters {
         display: flex;
         justify-content: center;
         margin-bottom: 16px;
     }
+
     .tabs {
         align-items: center;
         width: 100%;
-        margin-bottom:24px;
+        margin-bottom: 24px;
     }
 
     .tab {
@@ -96,18 +128,22 @@
         background-color: rgba(144, 238, 144, 0.24);
         display: inline-flex;
     }
+
     .selected {
         background-color: lightgreen;
     }
-    .maps{
+
+    .maps {
         display: grid;
         grid-template-columns: 1fr 1fr;
     }
-    .compareGraphs{
+
+    .compareGraphs {
         padding-bottom: 16px;
     }
+
     .tab:hover {
-        cursor:pointer;
+        cursor: pointer;
         background-color: rgba(133, 206, 144, 0.71);
     }
 

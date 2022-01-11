@@ -1,29 +1,8 @@
 <template>
     <div class="chartComparison">
         <div class="timespanConfiguration">
+            <div class="flex">
             <div class="selectedTimespans param">
-                <div class="gridWrapper">
-                    <div class="timespan"> Erste Zeitspanne:</div>
-
-                    <input class="timespanInput" :class="{'selected': editingFirst}" v-model="firstTimespan" readonly/>
-
-                    <div @click="editFirst()">
-                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-                    </div>
-                    <div @click="removeFirstTimespan()">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </div>
-                    <div class="timespan"> Zwiete Zeitspanne:</div>
-                        <input class="timespanInput" :class="{'selected': editingLast}" v-model="secondTimespan" readonly/>
-                    <div @click="editSecond()">
-                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-                    </div>
-                    <div @click="removeSecondTimespan()">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </div>
-                </div>
-            </div>
-            <div class="timeConfigPanel">
                 <div class="selectItem param">
                     <label> Datengranularität auswählen <br>
                         <select class="form-control" v-model="selectedType" @change="changeType">
@@ -37,11 +16,33 @@
                                max=40/>
                     </label>
                 </div>
+            </div>
+            <div class="timeConfigPanel">
+                <div class="gridWrapper">
+                    <div class="timespan"> Erste Zeitspanne:</div>
+                    <input class="timespanInput" :class="{'selected': editingFirst}" v-model="firstTimespan" readonly/>
+                    <div @click="editFirst()">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                    </div>
+                    <div @click="removeFirstTimespan()">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                    <div class="timespan"> Zwiete Zeitspanne:</div>
+                    <input class="timespanInput" :class="{'selected': editingLast}" v-model="secondTimespan" readonly/>
+                    <div @click="editSecond()">
+                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
+                    </div>
+                    <div @click="removeSecondTimespan()">
+                        <i class="fa fa-times" aria-hidden="true"></i>
+                    </div>
+                </div>
                 <div class="datePicker param">
                     <label>Startdatum für Periode auswählen </label>
                     <DatePicker v-model="selectedDate" @selected="changeStartDate" :minimum-view="selectedType" />
                 </div>
             </div>
+            </div>
+            <button>submit</button>
         </div>
         <div class="charts">
             <apexchart
@@ -195,11 +196,14 @@
     }
 
     .timespanConfiguration {
-        display: flex;
-        justify-content: space-between;
         background-color: lightgoldenrodyellow;
         border: solid 1px palegoldenrod;
         padding-right: 40px;
+    }
+
+    .flex{
+        display: flex;
+        justify-content: space-between;
     }
 
     i {
@@ -208,13 +212,17 @@
 
     .gridWrapper {
         display: grid;
-        grid-template-columns: 150px 190px 30px 30px;
+        grid-template-columns: 190px 30px 30px;
         justify-items: center;
         align-items: center;
     }
 
     .timespanInput {
         padding: 4px;
+    }
+    .timespan{
+        grid-column:1/4;
+        justify-self: flex-start;
     }
 
     .fa-pencil-alt {
