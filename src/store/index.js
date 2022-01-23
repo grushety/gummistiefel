@@ -26,8 +26,18 @@ const store = new Vuex.Store({
     strongEventsFilter : {maxPrec: 10},
     extremEventsFilter: {severity: 0.2, area: 3, duration: 10},
 
+    // Used for play animation on map
+    interval: null
+
   },
   mutations: {
+    setInterval(state, callback, ms) {
+      state.interval = setInterval(callback, ms);
+    },
+    clearInterval(state) {
+      clearInterval(state.interval);
+      state.interval = null;
+    },
     setEvents(state, events){
       state.events = events;
     },
@@ -113,7 +123,6 @@ const store = new Vuex.Store({
       commit('setArea', a)
     },
 
-    //START
     //START
     updateStrongEventsFilters({commit}, filters){
       commit('setStrongEventsFilter', filters);

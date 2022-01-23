@@ -34,16 +34,21 @@
                 ></gmap-marker>
             </gmap-map>
         </div>
-        <div class="time-control">
-            <i class="fa fa-play-circle fa-2x" aria-hidden="true"></i>
-            <!--<div class="play-button-outer">
-                <div class="play-button"></div>
-            </div>-->
-            <div class="timeline">
-                <div class="timeline-marker"></div>
-            </div>
 
+        <p class="text-center">
+            {{ new Date(timestamp) }}
+        </p>
+        <div class="time-control">
+            <div @click="play" class="play">
+                <i v-if="$store.state.interval"  class="fa fa-2x fa-pause-circle" aria-hidden="true"></i>
+                <i v-else  class="fa fa-2x fa-play-circle" aria-hidden="true"></i>
+            </div>
+            <div class="timeline" @click="handleTimelineClick">
+                <div class="timeline-marker" :style="`left: ${timelinePercentage*100}%`"></div>
+            </div>
         </div>
+        <br><br>
+
     </div>
 </template>
 
@@ -61,7 +66,7 @@ export default {
             zoom: 4,
             markers: []
         },
-        playing: false,
+        playInterval: null,
         compareView: false,
         zoomFactors: {
             // values according to https://stackoverflow.com/a/26966583/5062828
@@ -85,11 +90,15 @@ export default {
             3  : 147914387.600000,
             2  : 295828775.300000,
             1  : 591657550.500000
-        }
+        },
+        length: 74 * 3600 * 1000,
+        events: [],
+        visibleEvents: [],
+        timestamp: 0
     }),
     computed: {
         center() {
-            const lngs = this.events.map(event => event.lng);
+            const lngs = this.events.map(event => event.lon);
             const lats = this.events.map(event => event.lat);
             
             const minLng = Math.min(...lngs);
@@ -101,6 +110,16 @@ export default {
                 lat: (maxLat - minLat) / 2 + minLat,
                 lng: (maxLng - minLng) / 2 + minLng
             }
+        },
+        startTime() {
+            if (this.events.length) return this.events[0].date.getTime();
+            return 0;
+        },
+        endTime() {
+            return this.startTime + this.length;
+        },
+        timelinePercentage() {
+            return (this.timestamp - this.startTime) / (this.endTime - this.startTime);
         }
     },
     watch: {
@@ -110,47 +129,32 @@ export default {
         "map2.zoom"() {
             this.onZoomChanged(2);
         },
+        timestamp() {
+            let visibleEvents = [this.events[this.events.length - 1]];
+            for (const event of this.events) {
+                if (event.date.getTime() >= this.timestamp) {
+                    visibleEvents = [event];
+                    break
+                }
+            }
+            this.visibleEvents = visibleEvents;
+            this.onZoomChanged(1);
+            this.onZoomChanged(2);
+        }
     },
     created() {
-        // dummy data
-        this.events = [
-            {
-                area: 0.5000000059604645,
-                id: "197907495",
-                length: 26,
-                si: 0.29999999329447746,
-                start: "1980-01-11T03:00:00",
-                lat: -4,
-                lng: 8
-            },
-            {
-                area: 0.3000000059604645,
-                id: "197907495",
-                length: 26,
-                si: 0.29999999329447746,
-                start: "1980-01-11T03:00:00",
-                lat: -10,
-                lng: 6
-            },
-            {
-                area: 0.2000000059604645,
-                id: "197907495",
-                length: 26,
-                si: 0.129999999329447746,
-                start: "1980-01-11T03:00:00",
-                lat: 3,
-                lng: 13
-            },
-            {
-                area: 0.8000000059604645,
-                id: "197907495",
-                length: 26,
-                si: 0.629999999329447746,
-                start: "1980-01-11T03:00:00",
-                lat: 6,
-                lng: -12
-            }
-        ]
+        this.$axios.get('/timeseries?id=' + 201706105).then(res => {
+            this.events = res.data.map(event => ({
+                ...event,
+                date: new Date(event.date),
+                si: event.si + 0.5
+            }));
+            this.visibleEvents = [this.events[0]];
+            this.timestamp = this.events[0].date.getTime();
+            
+            this.onZoomChanged(1);
+            this.onZoomChanged(2);
+        });
         
         const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
         const circle = document.createElementNS("http://www.w3.org/2000/svg", "circle");
@@ -163,15 +167,29 @@ export default {
         svg.appendChild(circle);
 
         this.icon = 'data:image/svg+xml;base64,' + window.btoa(new XMLSerializer().serializeToString(svg));
-        
-        this.onZoomChanged(1);
-        this.onZoomChanged(2);
     },
     methods: {
-        play() {},
+        handleTimelineClick(e) {
+            const rect = e.target.getBoundingClientRect();
+            const x = (e.clientX - rect.left) / rect.width;
+            this.timestamp = this.startTime + (this.length * x)
+        },
+        play() {
+            if (this.$store.state.interval == null) {
+                const speed = 1; // frames per ms, 1 = highest speed
+                this.$store.commit('setInterval', () => {
+                        this.timestamp += 60 * 1000 / speed;
+                        if (this.timestamp >= this.endTime) {
+                            this.$store.commit('clearInterval')
+                        }
+                    }, speed)
+            } else {
+                this.$store.commit('clearInterval')
+            }
+        },
         onZoomChanged(mapIndex) {
-            this[`map${mapIndex}`].markers = this.events.map(event => {
-                const radius = event.area/this.zoomFactors[this[`map${mapIndex}`].zoom]*10000000000;
+            this[`map${mapIndex}`].markers = this.visibleEvents.map(event => {
+                const radius = event.area/this.zoomFactors[this[`map${mapIndex}`].zoom]*1000000000;
 
                 const svg = document.createElementNS("http://www.w3.org/2000/svg", "svg");
                 svg.setAttribute('width', radius*2);
@@ -190,7 +208,7 @@ export default {
                 return {
                     pos: {
                         lat: event.lat,
-                        lng: event.lng
+                        lng: event.lon
                     },
                     icon: {
                         url: 'data:image/svg+xml;base64,' + window.btoa(new XMLSerializer().serializeToString(svg)),
@@ -219,57 +237,45 @@ export default {
     width: 1200px;
 }
 
-    .time-control {
-        margin-top: 2em;
-        display: flex;
-        height: 20px;
-    }
+.time-control {
+    display: flex;
+    height: 20px;
+    cursor: pointer;
+}
 
-    .play-button-outer {
-        width: 2em;
-        height: 2em;
-        background-color: rgba(0, 0, 0, .25);
-        cursor: pointer;
-    }
+.time-control .play {
+    z-index: 10;
+}
 
-    .play-button {
-        margin: 0 auto;
-        top: 25%;
-        position: relative;
-        width: 10px;
-        height: 0;
-        border-style: solid;
-        border-width: 1em 0 1em 1.5em;
-        border-color: transparent transparent transparent #000;
-        opacity: .75;
-    }
+.play-button {
+    margin: 0 auto;
+    top: 25%;
+    position: relative;
+    width: 10px;
+    height: 0;
+    border-style: solid;
+    border-width: 1em 0 1em 1.5em;
+    border-color: transparent transparent transparent #000;
+    opacity: .75;
+}
 
-    .play-button-outer:hover {
-        background-color: rgba(0, 0, 0, .5);
-    }
+.timeline {
+    border: 1px solid black;
+    width: 100%;
+    margin-top: 4px;
+    height: 20px;
+    margin-left: -8px;
+    position: relative;
+    z-index: 0;
+}
 
-    .play-button-outer:hover .play-button {
-        opacity: 1;
-    }
+.timeline-marker {
+    border-left: 2px solid red;
+    height: 100%;
+    position: absolute;
+}
 
-    .timeline {
-        border: 1px solid black;
-        width: 100%;
-        margin-top: 4px;
-        height: 20px;
-        margin-left: -8px;
-        position: relative;
-        z-index: 0;
-    }
-
-    .timeline-marker {
-        border-left: 2px solid red;
-        height: 100%;
-        position: absolute;
-        left: 10%;
-    }
-
-    .fa-play-circle {
-        z-index: 100;
-    }
+.fa-play-circle {
+    z-index: 100;
+}
 </style>
