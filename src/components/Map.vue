@@ -1,6 +1,8 @@
 <template>
     <div class="map-wrapper">
+        <!--
         <button style="margin-bottom:1em" @click="compareView = !compareView">{{ compareView ? 'Single View' : 'Compare View'}}</button>
+        -->
         <div class="flex">
             <gmap-map
                     :zoom="map1.zoom"
@@ -55,7 +57,9 @@
 <script>
 export default {
     props: {
-        //events: Array
+        firstId: Number,
+        secondId: Number,
+        compareView: Boolean,
     },
     data: () => ({
         map1: {
@@ -67,7 +71,6 @@ export default {
             markers: []
         },
         playInterval: null,
-        compareView: false,
         zoomFactors: {
             // values according to https://stackoverflow.com/a/26966583/5062828
             20 : 1128.497220,

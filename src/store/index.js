@@ -38,6 +38,9 @@ const store = new Vuex.Store({
     leftRangeEvents: [],
     rightRangeEvents: [],
 
+    eventOfSingleMap: [],
+    eventOfLeftMap: [],
+    eventOfRightMap: [],
     // Used for play animation on map
     interval: null,
   },
@@ -82,6 +85,18 @@ const store = new Vuex.Store({
 
     setRightRangeEvents( state, events){
       state.rightRangeEvents = events;
+    },
+
+    setEventOfSingleMap(state, event){
+      state.eventOfSingleMap=event;
+    },
+
+    setEventOfLeftMap(state, event){
+      state.eventOfLeftMap=event
+    },
+
+    setEventOfRightMap(state, event){
+      state.eventOfRightMap=event
     },
 
     /////////////////////////////////////////////
@@ -158,6 +173,11 @@ const store = new Vuex.Store({
       commit('setRightRangeEvents', formattedEvents)
     },
 
+    async setEventOfMap({commit}, params){
+      const event = await functions.getEvent(params.id);
+      commit('setEventOfLeftMap', event);
+    },
+
     //////////////////////////////////////////////////////////////////
     async getEvents({commit,state}){
       const events = await functions.getEvents(state.filters);
@@ -182,7 +202,6 @@ const store = new Vuex.Store({
       commit('setLocationMarkers', points);
       commit('setBounds', bounds);
     },
-
     /* obsolete
     setFilters({commit, dispatch, state}){
       let filters = "";

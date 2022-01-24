@@ -4,6 +4,7 @@ const getUrl = "http://rz-vm154.gfz-potsdam.de:8080/highprecip/events/get?";
 const backendEvents = "http://127.0.0.1:5000/events";
 const backendFilter = "http://127.0.0.1:5000/filter";
 const backendRange = "http://127.0.0.1:5000/range"
+const backendTimeseries  = "http://127.0.0.1:5000/timeseries"
 
 //const params = new URLSearchParams();
 
@@ -59,6 +60,10 @@ export default {
     async getTopEvents(params){
         const {data} = await axios.get(backendRange , {params: params});
         return data;
-    }
+    },
 
+    async getEventForMap(id){
+        const {data} = await axios.get(backendTimeseries, {params: {id : id}})
+        return data;
+    }
 }

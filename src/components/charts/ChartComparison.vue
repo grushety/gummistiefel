@@ -210,7 +210,7 @@
                 return html;
             },
             showOnMap() {
-
+                this.$emit('setMap', this.selectedLeftItem[3], this.selectedRightItem[3])
             },
         }
     }

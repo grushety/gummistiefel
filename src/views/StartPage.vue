@@ -18,16 +18,19 @@
             </div>
             <div class="chart">
                 <MainChart v-if="showMainGraph"/>
-                <MaxValueChart v-if="showKMaxGraph" @setMap="setMapView"/>
+                <MaxValueChart v-if="showKMaxGraph" @setMap="setMapSingleView"/>
                 <BoxPlotChart v-if="showBoxPlot"/>
             </div>
             <div class="maps">
-                <Map></Map>
+                <Map :first-id="singleMapId"/>
             </div>
         </div>
         <div class="compareViewContent" v-if="compareView">
             <div class="compareGraphs">
-                <ChartComparison/>
+                <ChartComparison @setMap="setMapDoubleView"/>
+            </div>
+            <div class="maps">
+                <Map :first-id="leftMapId" :second-id="rightMapId" compare-view/>
             </div>
         </div>
     </div>
@@ -59,6 +62,9 @@
                 showBoxPlot: false,
                 compareView: false,
                 commonView: true,
+                singleMapId: null,
+                leftMapId: null,
+                rightMapId: null,
             }
         },
         created() {
@@ -94,9 +100,14 @@
                     this.commonView = true;
                 }
             },
-            setMapView(id){
-                console.log("event id to show on map is "+ id)
+            setMapSingleView(id){
+                this.singleMapId = id;
             },
+            setMapDoubleView(idLeft, idRight){
+                console.log(idLeft, idRight)
+                this.leftMapId=idLeft;
+                this.rightMapId=idRight;
+            }
         }
     }
 </script>
