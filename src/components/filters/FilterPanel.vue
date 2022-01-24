@@ -56,20 +56,20 @@
         data() {
             return {
                 showEdit: false,
-                precEnabled: "maxPrec" in this.filter,
-                precValue: this.precEnabled ? this.filter.maxPrec : 50,
+                precEnabled: "prec" in this.filter,
+                precValue: this.precEnabled ? this.filter.prec : 0,
                 minPrec: 0,
                 maxPrec: 100,
-                severityEnabled: "severity" in this.filter,
-                severityValue: this.severityEnabled ? this.filter.severity : 0.5,
+                severityEnabled: "si" in this.filter,
+                severityValue: this.severityEnabled ? this.filter.si : 0,
                 minSeverity: 0,
                 maxSeverity: 1,
                 areaEnabled: "area" in this.filter,
-                areaValue: this.areaEnabled ? this.filter.area : 3,
+                areaValue: this.areaEnabled ? this.filter.area : 0,
                 minArea: 0,
                 maxArea: 30,
-                durationEnabled: "duration" in this.filter,
-                durationValue: this.durationEnabled? this.filter.duration: 5,
+                durationEnabled: "length" in this.filter,
+                durationValue: this.durationEnabled? this.filter.length: 0,
                 minDuration: 0,
                 maxDuration: 80,
             }
@@ -113,16 +113,16 @@
             setFilters() {
                 let filters = {};
                 if (this.precEnabled) {
-                    filters['maxPrec'] = Number(this.precValue);
+                    filters['prec'] = Number(this.precValue);
                 }
                 if (this.severityEnabled) {
-                    filters['severity'] = Number(this.severityValue);
+                    filters['si'] = Number(this.severityValue);
                 }
                 if (this.areaEnabled) {
                     filters['area'] = Number(this.areaValue);
                 }
                 if (this.durationEnabled) {
-                    filters['duration'] = Number(this.durationValue);
+                    filters['length'] = Number(this.durationValue);
                 }
                 if (this.type === "strong") {
                     this.updateStrongEventsFilters(filters)

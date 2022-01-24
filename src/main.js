@@ -6,13 +6,12 @@ import '@/plugins/apexcharts'
 import '@fortawesome/fontawesome-free/css/all.css'
 import '@fortawesome/fontawesome-free/js/all.js'
 
-
 Vue.config.productionTip = false;
 import * as VueGoogleMaps from "vue2-google-maps" // Import package
 
 Vue.use(VueGoogleMaps, {
     load: {
-        key: "AIzaSyBROKNbW4uEZWZFnEXp-B1m0NoNYqMYEjQ",
+        key: "AIzaSyDLgdbTYFsnVCZOIjpEmIX_h7xWVP1bJhg",
         libraries: "places"
     }
 });

@@ -1,161 +1,216 @@
 <template>
     <div class="chartComparison">
         <div class="timespanConfiguration">
-            <div class="flex">
-            <div class="selectedTimespans param">
-                <div class="selectItem param">
-                    <label> Datengranularität auswählen <br>
-                        <select class="form-control" v-model="selectedType" @change="changeType">
-                            <option v-for="option in options" :key="option.id">{{ option.name }}</option>
-                        </select>
-                    </label>
+            <div class="configPanels">
+                <div class="leftPanel param">
+                    <div class="inputItem param">
+                        <label> Anzahl der Elemente festlegen <br>
+                            <input type="number" v-model="selectedNumberLeft"
+                                   id="nOfExtremEventsLeft" min=1
+                                   max=30/>
+                        </label>
+                    </div>
+                    <div class="datePicker param">
+                        <label>Zeitperiode auswählen </label>
+                        <Datepicker range v-model="selectedDateLeft"
+                                    :date-format="{year: 'numeric', month: '2-digit', day: '2-digit'}"
+                                    lang="de"/>
+                    </div>
                 </div>
-                <div class="inputItem param">
-                    <label> Anzahl der Zeitelemente festlegen <br>
-                        <input type="number" v-model="selectedNumber" @input="changeNumber" id="nOfExtremEvents" min=1
-                               max=40/>
-                    </label>
+                <div class="filterList">
+                    <div v-for="option in filterOptions" :key="option.id" class="filter">
+                        <div class="filterItem" @click="setLeftFilter(option)" :class="{'selected': filterLeft === option.name}">{{
+                                option.name
+                            }}</div>
+                    </div>
+                </div>
+                <div class="rightPanel param">
+                    <div class="inputItem param">
+                        <label> Anzahl der Elemente festlegen <br>
+                            <input type="number" v-model="selectedNumberRight"
+                                   id="nOfExtremEventsRight" min=1
+                                   max=30/>
+                        </label>
+                    </div>
+                    <div class="datePicker param">
+                        <label>Zeitperiode auswählen </label>
+                        <Datepicker range v-model="selectedDateLeft"
+                                    :date-format="{year: 'numeric', month: '2-digit', day: '2-digit'}"
+                                    lang="de"/>
+                    </div>
+                </div>
+                <div class="filterList">
+                    <div v-for="option in filterOptions" :key="option.id" class="filter">
+                        <div class="filterItem" @click="setRightFilter(option)" :class="{'selected': filterRight === option.name}">{{
+                                option.name
+                            }}</div>
+                    </div>
                 </div>
             </div>
-            <div class="timeConfigPanel">
-                <div class="gridWrapper">
-                    <div class="timespan"> Erste Zeitspanne:</div>
-                    <input class="timespanInput" :class="{'selected': editingFirst}" v-model="firstTimespan" readonly/>
-                    <div @click="editFirst()">
-                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-                    </div>
-                    <div @click="removeFirstTimespan()">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </div>
-                    <div class="timespan"> Zwiete Zeitspanne:</div>
-                    <input class="timespanInput" :class="{'selected': editingLast}" v-model="secondTimespan" readonly/>
-                    <div @click="editSecond()">
-                        <i class="fa fa-pencil-alt" aria-hidden="true"></i>
-                    </div>
-                    <div @click="removeSecondTimespan()">
-                        <i class="fa fa-times" aria-hidden="true"></i>
-                    </div>
+            <button @click="submit">submit</button>
+            <div class="showOnMap" v-if="selectedLeftItem || selectedRightItem">
+                <div class="selectedEvents">
+                    <div class v-html="formattedSelectedItemLeft"></div>
+                    <div class v-html="formattedSelectedItemRight"></div>
                 </div>
-                <div class="datePicker param">
-                    <label>Startdatum für Periode auswählen </label>
-                    <DatePicker v-model="selectedDate" @selected="changeStartDate" :minimum-view="selectedType" />
-                </div>
+                <button @click="showOnMap" :disabled="!(this.selectedRightItem && this.selectedLeftItem)">Show on
+                    map
+                </button>
             </div>
-            </div>
-            <button>submit</button>
         </div>
         <div class="charts">
             <apexchart
-                    ref="firstChart"
-                    width="500"
-                    :options="firstOptions" :series="firstSeries">
+                ref="firstChart"
+                width="800"
+                @click="clickHandlerLeft"
+                :options="options" :series="firstSeries">
             </apexchart>
             <apexchart
-                    ref="secondChart"
-                    width="500"
-                    :options="firstOptions" :series="secondSeries">
+                ref="secondChart"
+                width="800"
+                @click="clickHandlerRight"
+                :options="options" :series="secondSeries">
             </apexchart>
-
         </div>
     </div>
 </template>
 
 <script>
-    import DatePicker from 'vuejs-datepicker';
+    import VueDatepickerUi from 'vue-datepicker-ui'
+    import 'vue-datepicker-ui/lib/vuedatepickerui.css';
     import utils from "../../utils";
+    import {mapActions, mapState} from "vuex";
 
     export default {
         name: "ChartComparison",
         components: {
-            DatePicker,
+            Datepicker: VueDatepickerUi,
         },
         data() {
             return {
                 selectedType: 'year',
-                selectedNumber: '12',
-                firstTimespan: 'Jan 01 1980 - Jan 01 1992',
-                secondTimespan: 'Jan 01 2000 - Jan 01 2012',
-                editingFirst: false,
-                editingLast: false,
-                selectedDate: new Date('1971, 1,  1'),
-                options: [
-                    {id: 1, name: 'year'},
-                    {id: 2, name: 'month'},
-                    {id: 3, name: 'day'}
-                ],
-                firstOptions: utils.newStackedHistogramOptions(),
-                secondOptions: utils.newStackedHistogramOptions(),
+                selectedNumberLeft: 10,
+                selectedNumberRight: 10,
+                selectedDateLeft: [new Date("1971-01-01"), new Date("2017-12-31")],
+                selectedDateRight: [new Date("1971-01-01"), new Date("2017-12-31")],
+                filterOptions: [{id: 0, name: "severity"}, {id: 1, name: "area"}, {id: 2, name: "length"}, {
+                    id: 3,
+                    name: "maxPrec"
+                }],
+                filterLeft: "severity",
+                filterLeftId: 0,
+                filterRight: "severity",
+                filterRightId: 0,
+                options: utils.newBubbleOptions(),
                 firstSeries: [],
                 secondSeries: [],
+                selectedLeftItem: null,
+                selectedRightItem: null,
+                idMapLeft: {},
+                idMapRight: {}
             }
         },
-        created() {
-            let series = utils.generateDataForAllYears();
-            this.yearsCategories = utils.getAllYears();
-            this.firstSeries = series;
-            this.secondSeries = series;
-            this.firstOptions.xaxis.categories = this.yearsCategories;
-            this.secondOptions.xaxis.categories = this.yearsCategories;
-        },
-        computed: {},
-        methods: {
-            changeType() {
-                console.log(this.selectedType)
-            },
-            changeNumber() {
-                console.log(this.selectedNumber)
-            },
-            changeStartDate() {
-                console.log(this.selectedDate);
-                if (this.selectedNumber === '') {
-                    this.$alert("Bitte die Anzahl der Timeintervalle angeben")
-                }
-                this.calculateEndDate(this.selectedDate)
-                this.editingLast = false;
-                this.editingFirst = false;
-            },
-            removeFirstTimespan() {
-                this.firstTimespan = "";
-            },
-            removeSecondTimespan() {
-                this.secondTimespan = "";
-            },
-            calculateEndDate(startDate) {
-                console.log(startDate)
-                let start = new Date(startDate);
-                let end = null;
-                if (this.selectedType === 'year') {
-                    end = start.setFullYear(start.getFullYear() + this.selectedNumber);
-                }
-                if (this.selectedType === "month") {
-                    end = start.setMonth(start.getMonth() + this.selectedNumber);
-                }
-                if (this.selectedType === "day") {
-                    end = start.setDate(start.getDate() + this.selectedNumber);
-                }
-                let endFormated =new Date(end).toDateString().substring(4,15);
-                let startFormated =start.toDateString().substring(4,15);
-                let result = startFormated+ " - " + endFormated
-                if(!this.editingFirst && !this.editingLast){
-                    this.$alert("Bitte wählen Sie den Zeitraum zum Bearbeiten aus")
-                }
-                if(this.editingFirst){
-                    this.firstTimespan = result;
-                }
-                if(this.editingLast){
-                    this.secondTimespan= result;
-                }
+        async created() {
+            let leftParams = this.formParams(this.filterLeftId, this.selectedNumberLeft, this.selectedDateLeft)
+            let rightParams = this.formParams(this.filterRightId, this.selectedNumberRight, this.selectedDateRight)
+            await this.getLeftRangeEvents(leftParams)
+            await this.getRightRangeEvents(rightParams)
 
+            this.firstSeries = this.leftRangeEvents;
+            this.secondSeries = this.rightRangeEvents;
+        },
+        watch: {
+            firstSeries: {
+                deep: true,
+                handler(val) {
+                    if (val !== 'undefined' && val !== null) {
+                        this.idMapLeft = this.computeIdMap(this.firstSeries);
+                    }
+                }
             },
-            editFirst() {
-                console.log("pressed editing first")
-                this.editingFirst = true;
-                this.editingLast = false;
+            secondSeries: {
+                deep: true,
+                handler(val) {
+                    if (val !== 'undefined' && val !== null) {
+                        this.idMapRight = this.computeIdMap(this.secondSeries);
+                    }
+                }
+            }
+        },
+        computed: {
+            ...mapState(["leftRangeEvents", "rightRangeEvents"]),
+            formattedSelectedItemLeft() {
+                return this.selectedLeftItem? this.formatItem(this.selectedLeftItem): null;
             },
-            editSecond() {
-                console.log("pressed editing last")
-                this.editingLast = true;
-                this.editingFirst = false;
+            formattedSelectedItemRight() {
+                return this.selectedRightItem? this.formatItem(this.selectedRightItem): null;
+            }
+        },
+        methods: {
+            ...mapActions(['getLeftRangeEvents', 'getRightRangeEvents']),
+            formParams(filterId, itemNumber, selectedDateRange) {
+                return {
+                    arg: filterId,
+                    k: itemNumber,
+                    start: utils.format_date(selectedDateRange[0]),
+                    end: utils.format_date(selectedDateRange[1])
+                }
+            },
+            setLeftFilter(option) {
+                this.filterLeft = option.name;
+                this.filterLeftId = option.id;
+            },
+            setRightFilter(option) {
+                this.filterRight = option.name;
+                this.filterRightId = option.id;
+            },
+            async submit() {
+                let leftParams = this.formParams(this.filterLeftId, this.selectedNumberLeft, this.selectedDateLeft)
+                let rightRarams = this.formParams(this.filterRightId, this.selectedNumberRight, this.selectedDateRight)
+                await this.getLeftRangeEvents(leftParams)
+                await this.getRightRangeEvents(rightRarams)
+
+                this.firstSeries = this.leftRangeEvents;
+                this.secondSeries = this.rightRangeEvents;
+                this.$refs.firstChart.updateSeries(this.firstSeries);
+                this.$refs.secondChart.updateSeries(this.secondSeries);
+            },
+
+            clickHandlerLeft(event, chartContext, config) {
+                console.log(config)
+                if (config.seriesIndex > -1 && config.dataPointIndex > -1) {
+                    this.selectedLeftItem = this.idMapLeft[config.seriesIndex][config.dataPointIndex]
+                }
+            },
+            clickHandlerRight(event, chartContext, config) {
+                console.log(config)
+                if (config.seriesIndex > -1 && config.dataPointIndex > -1) {
+                    this.selectedRightItem = this.idMapRight[config.seriesIndex][config.dataPointIndex]
+                    console.log(this.selectedRightItem)
+                }
+            },
+            computeIdMap(series) {
+                let map = {};
+                for (let i = 0; i < series.length; i++) {
+                    if (series[i].data.length > 0) {
+                        let j = 0;
+                        map[i] = {}
+                        series[i].data.forEach(it => {
+                            map[i][j] = it
+                            j = j + 1;
+                        })
+                    }
+                }
+                return map;
+            },
+            formatItem(item) {
+                let html = "<span>Ausgewählte Ereigniss:</span> <br>"
+                    + "<span> ID: " + item[3] + "</span> <br>"
+                    + "<span> Anfang: " + utils.format_date(new Date(item[0])) + "</span>"
+                return html;
+            },
+            showOnMap() {
+
             },
         }
     }
@@ -186,10 +241,6 @@
         margin-top: 8px;
     }
 
-    .vdp-datepicker {
-        margin-top: 8px;
-    }
-
     .charts {
         display: flex;
         justify-content: space-around;
@@ -201,13 +252,9 @@
         padding-right: 40px;
     }
 
-    .flex{
-        display: flex;
-        justify-content: space-between;
-    }
-
-    i {
-        font-size: 10px;
+    .configPanels {
+        display: grid;
+        grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
     .gridWrapper {
@@ -220,8 +267,9 @@
     .timespanInput {
         padding: 4px;
     }
-    .timespan{
-        grid-column:1/4;
+
+    .timespan {
+        grid-column: 1/4;
         justify-self: flex-start;
     }
 
@@ -231,5 +279,19 @@
 
     .selected {
         border-color: black;
+        background-color: yellowgreen;
     }
+
+    .selectedEvents {
+        display: grid;
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .filterItem{
+        padding: 8px;
+        margin: 4px;
+        text-align: center;
+        cursor: pointer;
+    }
+
 </style>

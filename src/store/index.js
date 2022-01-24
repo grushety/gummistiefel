@@ -1,6 +1,7 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
 import functions from "./functions";
+import utils from "@/utils";
 
 Vue.use(Vuex);
 
@@ -23,14 +24,67 @@ const store = new Vuex.Store({
     //for DEMO
 
     //START
-    strongEventsFilter : {maxPrec: 10},
-    extremEventsFilter: {severity: 0.2, area: 3, duration: 10},
+    strongEventsFilter : {prec: 10},
+    extremEventsFilter: {si: 0.2, area: 3, length: 10},
+
+    // events data for main map
+    allEvents: [],
+    selectedYearEvents: [],
+    selectedMonthEvents: [],
+
+    // event data for ktop map
+    allRangeEvents: [],
+    originalFormattedAllRangeEvents:[],
+    leftRangeEvents: [],
+    rightRangeEvents: [],
 
     // Used for play animation on map
-    interval: null
-
+    interval: null,
   },
   mutations: {
+    setStrongEventsFilter(state, filter){
+      this.state.strongEventsFilter = filter;
+      functions.setFilters(this.state.strongEventsFilter, this.state.extremEventsFilter).then(data => {
+        console.log(data)
+      });
+    },
+
+    setExtremEventsFilter(state, filter){
+      this.state.extremEventsFilter = filter;
+      functions.setFilters(this.state.strongEventsFilter, this.state.extremEventsFilter).then(data => {
+        console.log(data)
+      });
+    },
+
+    setAllEvents (state, events){
+      state.allEvents = events;
+    },
+
+    setSelectedYearEvents( state, events ){
+      state.selectedYearEvents = events;
+    },
+
+    setSelectedMonthEvents( state, events) {
+      state.selectedMonthEvents = events;
+    },
+
+    setAllRangeEvents( state, events){
+      state.allRangeEvents = events;
+    },
+
+    setOriginalFormattedAllRangeEvents(state, events){
+      state.originalFormattedAllRangeEvents = events;
+    },
+
+    setLeftRangeEvents( state, events){
+      state.leftRangeEvents = events;
+    },
+
+    setRightRangeEvents( state, events){
+      state.rightRangeEvents = events;
+    },
+
+    /////////////////////////////////////////////
     setInterval(state, callback, ms) {
       state.interval = setInterval(callback, ms);
     },
@@ -57,23 +111,54 @@ const store = new Vuex.Store({
       state.length=l;
     },
     setSeverity(state, s){
-      state.severity=s;
+      state.si=s;
     },
     setArea(state, a){
       state.area=a;
     },
     //MUTATION START
-    setStrongEventsFilter(state, filter){
-      this.state.strongEventsFilter = filter;
-      functions.setFilters(filter, "STRONG")
-    },
-
-    setExtremEventsFilter(state, filter){
-      this.state.extremEventsFilter = filter;
-      functions.setFilters(filter, "EXTREM")
-    },
   },
   actions: {
+    async getAllEvents({commit}){
+      const events = await functions.getAllEvents();
+      let allEvents = utils.formatDataForAllYears(events)
+      commit('setAllEvents', allEvents)
+    },
+
+    async getSelectedYearEvents({commit}, selectedYear){
+      const events = await functions.getEventsForYear(selectedYear);
+      let selectedYearEvents = utils.formatDataForSelectedYear(events);
+      commit('setSelectedYearEvents', selectedYearEvents)
+    },
+
+    async getSelectedMonthEvents({commit}, params) {
+      const events = await functions.getEventsForMonth(params);
+      let selectedMonthEvents = utils.formatDataForSelectedMonth(events)
+      commit('setSelectedMonthEvents', selectedMonthEvents)
+    },
+
+    async getAllRangeEvents({commit}, params){
+      params["start"]="1971-01-01"
+      params["end"]="2017-12-31"
+      const events = await functions.getTopEvents(params)
+      commit('setOriginalFormattedAllRangeEvents', events)
+      let formattedEvents = utils.formatDataForBubblePlot(events)
+      commit('setAllRangeEvents', formattedEvents)
+    },
+
+    async getLeftRangeEvents({commit}, params){
+      const events = await functions.getTopEvents(params)
+      let formattedEvents = utils.formatDataForBubblePlot(events)
+      commit('setLeftRangeEvents', formattedEvents)
+    },
+
+    async getRightRangeEvents({commit}, params){
+      const events = await functions.getTopEvents(params)
+      let formattedEvents = utils.formatDataForBubblePlot(events)
+      commit('setRightRangeEvents', formattedEvents)
+    },
+
+    //////////////////////////////////////////////////////////////////
     async getEvents({commit,state}){
       const events = await functions.getEvents(state.filters);
       commit('setEvents', events)
@@ -97,14 +182,16 @@ const store = new Vuex.Store({
       commit('setLocationMarkers', points);
       commit('setBounds', bounds);
     },
+
+    /* obsolete
     setFilters({commit, dispatch, state}){
       let filters = "";
       if (state.length.length) {
         filters = "subset=length(" + state.length + ")";
       }
-      if (state.severity.length) {
+      if (state.si.length) {
         filters = !filters.length ? "" : filters + "&";
-        filters = filters + "subset=si(" + state.severity + ")";
+        filters = filters + "subset=si(" + state.si + ")";
       }
       if (state.area.length) {
         filters = !filters.length ? "" : filters + "&";
@@ -112,7 +199,8 @@ const store = new Vuex.Store({
       }
       commit('setFilters', filters);
       dispatch('getEvents')
-    },
+    },*/
+
     setLength({commit}, l){
       commit('setLength', l)
     },

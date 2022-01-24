@@ -1,20 +1,20 @@
 <template>
     <div class="mainChart">
         <div class="controlPanel">
-            <button v-if="type==='years'" @click="changeToYearView">Zurück zur Gesamtübersicht</button>
-            <div  class="panelItem">
-            <label>
-                <input type="checkbox" :checked="extremOnly" @input="showExtremEreignisse">
-                Nur Extremereignisse Anzeigen
-            </label>
+            <button @click="changeToYearView">Zurück zur Gesamtübersicht</button>
+            <div class="panelItem">
+                <label>
+                    <input type="checkbox" :checked="extremOnly" @input="showExtremEreignisse">
+                    Nur Extremereignisse Anzeigen
+                </label>
             </div>
-            <p v-if="selectedYear!==''"> Ausgewhältes Jahr: {{selectedYear}}</p>
-            <p v-if="selectedMonth!==''"> Ausgewhältes Monat: {{selectedMonth}}</p>
+            <p v-if="selectedYear!==''"> Ausgewhältes Jahr: {{ selectedYear }}</p>
+            <p v-if="selectedMonth!==''"> Ausgewhältes Monat: {{ selectedMonth }}</p>
         </div>
-        <div class="chart" v-if="this.series.length>0">
+        <div class="chart">
             <apexchart ref="mainChart"
                        @click="clickHandler"
-                       width="800px"
+                       width="1400px"
                        :options="options" :series="series">
             </apexchart>
         </div>
@@ -23,6 +23,7 @@
 
 <script>
     import utils from "../../utils.js";
+    import {mapActions, mapState} from "vuex";
 
     export default {
         name: "MainChart",
@@ -43,11 +44,12 @@
                 yearsCategories: [],
                 monthCategories: [],
                 dayLabels: [],
-                options: {},
-                series: {},
+                options: utils.newStackedHistogramOptions(),
+                series: this.allEvents,
             }
         },
         computed: {
+            ...mapState(['allEvents', 'selectedYearEvents', 'selectedMonthEvents']),
             currentWidth() {
                 if (this.type === "year" || this.type === "days") {
                     return "800px";
@@ -56,26 +58,39 @@
                 }
             }
         },
+        watch: {
+            allEvents: {
+                deep: true,
+                handler(val) {
+                    console.log(val)
+                    this.options = utils.newStackedHistogramOptions();
+                    this.options.xaxis.categories = this.yearsCategories;
+                    this.series = this.allEvents;
+                    this.rerenderChart();
+                }
+            }
+        },
         created() {
+            this.getAllEvents();
             this.yearsCategories = utils.getAllYears();
             this.monthCategories = utils.getAllMonth();
             this.dayLabels = utils.getExampleDates();
             this.options = utils.newStackedHistogramOptions();
             this.options.xaxis.categories = this.yearsCategories;
-            this.series = utils.generateDataForAllYears();
+            this.series = this.allEvents;
         },
         methods: {
-            clickHandler(event, chartContext, config) {
+            ...mapActions(["getAllEvents", 'getSelectedYearEvents', 'getSelectedMonthEvents']),
+            async clickHandler(event, chartContext, config) {
                 console.log("clicked is " + this.options.xaxis.categories[config.dataPointIndex]);
                 if (this.type === "year" && !this.selectedYear) {
                     this.selectedYear = this.options.xaxis.categories[config.dataPointIndex];
                     console.log("selected year " + this.selectedYear);
-                    this.series = utils.generateDataForMonths();
-                    console.log("dataForMonth")
-                    console.log(this.series)
+                    await this.getSelectedYearEvents(this.selectedYear);
+                    this.series = this.selectedYearEvents;
                     this.options = utils.newStackedHistogramOptions();
                     this.options.xaxis.categories = utils.getAllMonth();
-                    // render the month map
+
                     this.rerenderChart();
                     this.type = "month";
                     return true;
@@ -84,9 +99,12 @@
                     if (config.dataPointIndex < 12) {
                         this.selectedMonth = this.options.xaxis.categories[config.dataPointIndex];
                         console.log("selected Month " + this.selectedMonth);
-                        this.series = utils.generateDataForDays(this.dayLabels);
-                        console.log(this.series)
-                        this.options = utils.newBubbleOptions();
+                        let monthCode = utils.getMonthCode(this.selectedMonth);
+                        console.log("Month " + this.selectedMonth + " code " + monthCode)
+                        await this.getSelectedMonthEvents({year: this.selectedYear, month: monthCode});
+                        this.series = this.selectedMonthEvents;
+                        this.options = utils.newStackedHistogramOptions();
+                        this.options.xaxis.categories = utils.getAllDaysKey();
                         this.rerenderChart();
                         this.type = "day";
                         return true;
@@ -99,8 +117,8 @@
 
             async changeToYearView() {
                 this.type = "year";
-                this.series = utils.generateDataForAllYears();
-                console.log(this.series);
+                await this.getAllEvents();
+                this.series = this.allEvents;
                 this.selectedYear = "";
                 this.selectedMonth = "";
                 this.options = utils.newStackedHistogramOptions();
@@ -108,26 +126,27 @@
                 this.rerenderChart();
             },
             rerenderChart() {
-                this.$refs.mainChart.updateOptions(this.options);
-                this.$refs.mainChart.updateSeries(this.series);
+                if (this.$refs.mainChart !== 'undefined') {
+                    this.$refs.mainChart.updateOptions(this.options);
+                    this.$refs.mainChart.updateSeries(this.series);
+                }
             },
             sleep(ms) {
                 return new Promise(resolve => setTimeout(resolve, ms));
             },
-            showExtremEreignisse(){
+            showExtremEreignisse() {
                 this.extremOnly = !this.extremOnly;
                 console.log(this.extremOnly)
-                if(this.extremOnly){
+                if (this.extremOnly) {
                     console.log("bin in extrem only")
                     this.series = [this.series[1]]
                     this.rerenderChart();
-                }
-                else{
-                    if(this.type === "year"){
+                } else {
+                    if (this.type === "year") {
                         this.series = utils.generateDataForAllYears();
                     }
-                    if(this.type === "month"){
-                        this.series =  utils.generateDataForMonths();
+                    if (this.type === "month") {
+                        this.series = utils.generateDataForMonths();
                     }
                     this.rerenderChart();
                 }
@@ -152,8 +171,8 @@
         background-color: rgba(219, 219, 219, 0.24);
     }
 
-    .panelItem{
-        padding:16px 0;
+    .panelItem {
+        padding: 16px 0;
     }
 
 

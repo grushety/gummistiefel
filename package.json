@@ -18,10 +18,12 @@
     "vue": "^2.6.11",
     "vue-apexcharts": "^1.6.2",
     "vue-chartjs": "^3.5.1",
+    "vue-datepicker-ui": "^2.3.0",
     "vue-router": "^3.5.3",
     "vue-simple-alert": "^1.1.1",
     "vue2-google-maps": "^0.10.7",
     "vuejs-datepicker": "^1.6.2",
+    "vuejs-range-datepickers": "^2.0.0",
     "vuex": "^3.4.0"
   },
   "devDependencies": {

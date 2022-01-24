@@ -1,9 +1,9 @@
 <template>
     <div class="mainPage">
         <div class="pageTabs">
+            <p class="commonView viewTab" :class="{'selected': commonView}" @click="selectView(1)">Datenübersicht</p>
             <p class="compareView viewTab" :class="{'selected': compareView}" @click="selectView(0)">Daten in zwei Perioden
                 vergleichen</p>
-            <p class="commonView viewTab" :class="{'selected': commonView}" @click="selectView(1)">Datenübersicht</p>
         </div>
         <div class="commonViewContent" v-if="commonView">
             <div class="filters">
@@ -18,7 +18,7 @@
             </div>
             <div class="chart">
                 <MainChart v-if="showMainGraph"/>
-                <MaxValueChart v-if="showKMaxGraph"/>
+                <MaxValueChart v-if="showKMaxGraph" @setMap="setMapView"/>
                 <BoxPlotChart v-if="showBoxPlot"/>
             </div>
             <div class="maps">
@@ -34,7 +34,7 @@
 </template>
 
 <script>
-    import {mapState} from "vuex";
+    import {mapState, mapActions} from "vuex";
     import FilterPanel from "../components/filters/FilterPanel";
     import MainChart from "../components/charts/MainChart"
     import MaxValueChart from "../components/charts/MaxValueChart";
@@ -57,14 +57,18 @@
                 showMainGraph: true,
                 showKMaxGraph: false,
                 showBoxPlot: false,
-                compareView: true,
-                commonView: false,
+                compareView: false,
+                commonView: true,
             }
         },
+        created() {
+           this.getAllEvents();
+        },
         computed: {
-            ...mapState(['strongEventsFilter', 'extremEventsFilter']),
+            ...mapState(['strongEventsFilter', 'extremEventsFilter', 'allEvents']),
         },
         methods: {
+            ...mapActions(["getAllEvents"]),
             setShowMain() {
                 this.showMainGraph = true;
                 this.showKMaxGraph = false;
@@ -89,6 +93,9 @@
                     this.compareView = false;
                     this.commonView = true;
                 }
+            },
+            setMapView(id){
+                console.log("event id to show on map is "+ id)
             },
         }
     }
@@ -146,5 +153,6 @@
         cursor: pointer;
         background-color: rgba(133, 206, 144, 0.71);
     }
+
 
 </style>
