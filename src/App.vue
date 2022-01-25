@@ -30,7 +30,7 @@
         padding: 0;
         color: #455A64;
         text-align: center;
-        }
+    }
     html, body {
         height: 100%;
     }
@@ -136,12 +136,14 @@
 
     .controlPanel{
         background: lightgoldenrodyellow;
-        border: solid 1px palegoldenrod;
-        padding: 8px;
+        padding: 16px 8px;
+        border: solid 1px orange;
+        text-align: center;
     }
 
     label{
         font-family: 'Open Sans', sans-serif;
     }
+
 
 </style>

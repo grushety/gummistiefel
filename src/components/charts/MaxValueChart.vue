@@ -1,19 +1,19 @@
 <template>
     <div class="maxValueChart">
         <div class="controlPanel">
-            <label for="nOfExtremEvents"> Legen Sie die Anzahl der anzuzeigenden Extremereignisse fest </label>
-            <input type="number" v-model="number" id="nOfExtremEvents" min=0 max=30/>
-            <br>
+            <div class="label"> Legen Sie die Anzahl der anzuzeigenden Extremereignisse fest </div> <br>
+            <input type="number" v-model="number" id="nOfExtremEvents" min=0 max=30/><br>
+            <div class="label"> Sortierkriterium auswählen </div>
             <div class="filterList">
                 <div v-for="option in criteria" :key="option.id" class="filter">
-                    <p @click="setCriteria(option)" :class="{'selected': criterium === option.name}">{{
+                    <div class="filterItem" @click="setCriteria(option)" :class="{'selected': criterium === option.name}">{{
                             option.name
-                        }}</p>
+                        }}</div>
                 </div>
             </div>
             <button @click="submit">Submit</button>
             <div class="showOnMap" v-if="selectedItem">
-                <div class v-html="formattedSelectedItem"></div>
+                <div class="selectedEvent" v-html="formattedSelectedItem"></div>
                 <button @click="showOnMap">Show on map</button>
             </div>
         </div>
@@ -22,14 +22,15 @@
                 ref="maxChart"
                 @click="clickHandler"
                 width="1200"
-                :options="options" :series="series">
+                :options="options" :series="series"
+            >
             </apexchart>
         </div>
     </div>
 </template>
 
 <script>
-    import utils from "../../utils";
+    import utils from "../../store/utils";
     import {mapActions, mapState} from "vuex";
 
     export default {
@@ -40,11 +41,9 @@
                 series: this.allRangeEvents,
                 options: utils.newBubbleOptions(),
                 selectedId: 0,
-                criterium: "severity",
-                criteria: [{id: 0, name: "severity"}, {id: 1, name: "area"}, {id: 2, name: "length"}, {
-                    id: 3,
-                    name: "maxPrec"
-                }],
+                criterium: "Gesamtintensität",
+                criteria: [{id: 0, name: "Gesamtintensität"}, {id: 1, name: "Räumliche Ausdehnung"}, {id: 2, name: "Dauer"}, {
+                    id: 3, name: "Niederschlagsmenge"}],
                 idMap: {},
                 selectedItem: null,
             }
@@ -67,9 +66,11 @@
         computed: {
             ...mapState(['allRangeEvents', "originalFormattedAllRangeEvents"]),
             formattedSelectedItem() {
-                let html = "<p>Ausgewählte event:</p> <br>"
-                    + "<p> id: " + this.selectedItem[3] + "</p> <br>"
-                    + "<p> begin: " + utils.format_date(new Date(this.selectedItem[0])) + "</p>"
+                let html = "<span>Ausgewählte event:</span> <br>"
+                    + "<span> ID: " + this.selectedItem[3] + "</span> <br>"
+                    + "<span> Anfang: " + utils.format_date(new Date(this.selectedItem[0])) + "</span> <br>"
+                    + "<span> Dauer: "  + this.selectedItem[1] + "</span> <br>"
+                    + "<span> Area: " + this.selectedItem[2] + "</span> <br>"
                 return html;
             },
         },
@@ -118,21 +119,50 @@
         display: grid;
         grid-template-columns: 20% auto;
         grid-gap: 40px;
-        text-align: left;
-    }
-
-    label {
-        font-weight: 600;
-        font-size: 14px;
-    }
-
-    .selected {
-        background-color: aquamarine;
+        align-items: start;
+        text-align: center;
     }
 
     .filter {
         cursor: pointer;
     }
 
+    .selectedEvent{
+        padding: 16px;
+    }
+
+    .label {
+        font-weight: bolder;
+        margin-top: 16px;
+        font-size: 12px;
+    }
+    .selected {
+        border-color: black;
+        background-color: yellowgreen;
+    }
+    .filterList{
+        min-width: 250px;
+        border: solid 1px yellowgreen;
+        margin: 16px;
+    }
+
+    .filterItem{
+        padding: 8px;
+        text-align: center;
+        cursor: pointer;
+    }
+    .filterItem:hover{
+        background-color: #c7da9f;
+    }
+    .controlPanel{
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+
+    input{
+        padding: 8px;
+        margin: 16px;
+    }
 
 </style>

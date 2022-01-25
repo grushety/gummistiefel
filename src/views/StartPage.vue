@@ -7,14 +7,13 @@
         </div>
         <div class="commonViewContent" v-if="commonView">
             <div class="filters">
-                <FilterPanel type="strong" filter-name="Starkereignisse" :filter="strongEventsFilter"/>
-                <FilterPanel type="extrem" filter-name="Extremereignisse" :filter="extremEventsFilter"/>
+                <FilterPanel/>
             </div>
             <div class="tabs">
                 <p class="tab" :class="showMainGraph? 'selected': ''" @click="setShowMain">Main Graph</p>
                 <p class="tab" :class="showKMaxGraph? 'selected': ''" @click="setShowKMax">K- Exteme Ereignisse
                     Graph</p>
-                <p class="tab" :class="showBoxPlot? 'selected': ''" @click="setShowBoxPlot">K- BoxPlot </p>
+                <!--<p class="tab" :class="showBoxPlot? 'selected': ''" @click="setShowBoxPlot">K- BoxPlot </p>-->
             </div>
             <div class="chart">
                 <MainChart v-if="showMainGraph"/>
@@ -124,11 +123,6 @@
     .viewTab:hover{
         cursor:pointer;
     }
-    .filters {
-        display: flex;
-        justify-content: center;
-        margin-bottom: 16px;
-    }
 
     .tabs {
         align-items: center;
@@ -149,11 +143,6 @@
 
     .selected {
         background-color: lightgreen;
-    }
-
-    .maps {
-        display: grid;
-        grid-template-columns: 1fr 1fr;
     }
 
     .compareGraphs {

@@ -20,51 +20,6 @@ import VueSimpleAlert from "vue-simple-alert";
 
 Vue.use(VueSimpleAlert);
 
-import {Line} from 'vue-chartjs';
-Vue.component('line-chart', {
-    extends: Line,
-    props: {
-        labels: {
-            type: Array,
-            // eslint-disable-next-line vue/require-valid-default-prop
-            default: ['January', 'February', 'March', 'April', 'May', 'June', 'July']
-        },
-        datasets: Array,
-		options: {
-			type: Object,
-			default: null
-		}
-    },
-    watch: {
-        'datasets.length'() {
-            this.renderChartData()
-        },
-        'labels.length'(){
-            this.renderChartData()
-        },
-        options: {
-			deep: true,
-			handler(){
-				console.log("watchaaa", this.options)
-				this.renderChartData()
-			}
-		}
-    },
-    mounted() {
-        this.renderChartData()
-    },
-    methods: {
-        renderChartData() {
-			console.log(this.options)
-            this.renderChart({
-                labels: this.labels,
-                datasets: this.datasets,
-            }, { responsive: true, maintainAspectRatio: false, ...this.options })
-        }
-    }
-
-});
-
 import axios from 'axios';
 
 Vue.prototype.$axios = axios.create({

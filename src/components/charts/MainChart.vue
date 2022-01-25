@@ -22,7 +22,7 @@
 </template>
 
 <script>
-    import utils from "../../utils.js";
+    import utils from "../../store/utils.js";
     import {mapActions, mapState} from "vuex";
 
     export default {
@@ -123,6 +123,7 @@
                 this.selectedMonth = "";
                 this.options = utils.newStackedHistogramOptions();
                 this.options.xaxis.categories = utils.getAllYears();
+                this.extremOnly=false;
                 this.rerenderChart();
             },
             rerenderChart() {
@@ -160,6 +161,7 @@
         align-content: center;
         display: grid;
         grid-template-columns: 20% auto;
+        align-items: start;
         grid-gap: 40px;
     }
 

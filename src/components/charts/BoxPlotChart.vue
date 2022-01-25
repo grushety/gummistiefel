@@ -32,7 +32,7 @@
 </template>
 
 <script>
-    import utils from "../../utils";
+    import utils from "../../store/utils";
 
     export default {
         name: "BoxPlotChart",

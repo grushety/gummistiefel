@@ -6,10 +6,6 @@
                 <h3 class="title">Visual representation of the "Gummistiefel" project</h3>
             </div>
         </div>
-        <div class="buttonLink">
-            <router-link class="backLink" to="/oldStartPage">Go to old demo</router-link>
-            <router-link class="backLink" to="/">Go new version</router-link>
-        </div>
     </div>
 </template>
 
@@ -49,7 +45,8 @@
         text-decoration: none;
         color: black
     }
-    .left{
+
+    .left {
         display: flex;
         align-items: center;
     }

@@ -4,14 +4,13 @@
             <div class="configPanels">
                 <div class="leftPanel param">
                     <div class="inputItem param">
-                        <label> Anzahl der Elemente festlegen <br>
-                            <input type="number" v-model="selectedNumberLeft"
-                                   id="nOfExtremEventsLeft" min=1
-                                   max=30/>
-                        </label>
+                        <div class="label"> Anzahl der Elemente festlegen</div>
+                        <input type="number" v-model="selectedNumberLeft"
+                               id="nOfExtremEventsLeft" min=1
+                               max=30/>
                     </div>
                     <div class="datePicker param">
-                        <label>Zeitperiode auswählen </label>
+                        <div class="label">Zeitperiode auswählen </div>
                         <Datepicker range v-model="selectedDateLeft"
                                     :date-format="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                                     lang="de"/>
@@ -19,31 +18,34 @@
                 </div>
                 <div class="filterList">
                     <div v-for="option in filterOptions" :key="option.id" class="filter">
-                        <div class="filterItem" @click="setLeftFilter(option)" :class="{'selected': filterLeft === option.name}">{{
+                        <div class="filterItem" @click="setLeftFilter(option)"
+                             :class="{'selected': filterLeft === option.name}">{{
                                 option.name
-                            }}</div>
+                            }}
+                        </div>
                     </div>
                 </div>
                 <div class="rightPanel param">
                     <div class="inputItem param">
-                        <label> Anzahl der Elemente festlegen <br>
+                        <div class="label"> Anzahl der Elemente festlegen </div>
                             <input type="number" v-model="selectedNumberRight"
                                    id="nOfExtremEventsRight" min=1
                                    max=30/>
-                        </label>
                     </div>
                     <div class="datePicker param">
-                        <label>Zeitperiode auswählen </label>
-                        <Datepicker range v-model="selectedDateLeft"
+                        <div class="label">Zeitperiode auswählen </div>
+                        <Datepicker range v-model="selectedDateRight"
                                     :date-format="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                                     lang="de"/>
                     </div>
                 </div>
                 <div class="filterList">
                     <div v-for="option in filterOptions" :key="option.id" class="filter">
-                        <div class="filterItem" @click="setRightFilter(option)" :class="{'selected': filterRight === option.name}">{{
+                        <div class="filterItem" @click="setRightFilter(option)"
+                             :class="{'selected': filterRight === option.name}">{{
                                 option.name
-                            }}</div>
+                            }}
+                        </div>
                     </div>
                 </div>
             </div>
@@ -62,11 +64,13 @@
             <apexchart
                 ref="firstChart"
                 width="800"
+                height="700"
                 @click="clickHandlerLeft"
                 :options="options" :series="firstSeries">
             </apexchart>
             <apexchart
                 ref="secondChart"
+                height="700"
                 width="800"
                 @click="clickHandlerRight"
                 :options="options" :series="secondSeries">
@@ -78,7 +82,7 @@
 <script>
     import VueDatepickerUi from 'vue-datepicker-ui'
     import 'vue-datepicker-ui/lib/vuedatepickerui.css';
-    import utils from "../../utils";
+    import utils from "../../store/utils";
     import {mapActions, mapState} from "vuex";
 
     export default {
@@ -93,13 +97,11 @@
                 selectedNumberRight: 10,
                 selectedDateLeft: [new Date("1971-01-01"), new Date("2017-12-31")],
                 selectedDateRight: [new Date("1971-01-01"), new Date("2017-12-31")],
-                filterOptions: [{id: 0, name: "severity"}, {id: 1, name: "area"}, {id: 2, name: "length"}, {
-                    id: 3,
-                    name: "maxPrec"
-                }],
-                filterLeft: "severity",
+                filterOptions: [{id: 0, name: "Gesamtintensität"}, {id: 1, name: "Räumliche Ausdehnung"}, {id: 2, name: "Dauer"}, {
+                    id: 3, name: "Niederschlagsmenge"}],
+                filterLeft: "Gesamtintensität",
                 filterLeftId: 0,
-                filterRight: "severity",
+                filterRight: "Gesamtintensität",
                 filterRightId: 0,
                 options: utils.newBubbleOptions(),
                 firstSeries: [],
@@ -140,10 +142,10 @@
         computed: {
             ...mapState(["leftRangeEvents", "rightRangeEvents"]),
             formattedSelectedItemLeft() {
-                return this.selectedLeftItem? this.formatItem(this.selectedLeftItem): null;
+                return this.selectedLeftItem ? this.formatItem(this.selectedLeftItem) : null;
             },
             formattedSelectedItemRight() {
-                return this.selectedRightItem? this.formatItem(this.selectedRightItem): null;
+                return this.selectedRightItem ? this.formatItem(this.selectedRightItem) : null;
             }
         },
         methods: {
@@ -221,24 +223,14 @@
         padding: 16px 4px;
     }
 
-    .timeConfigPanel {
-        display: flex;
-        justify-items: flex-start;
-    }
-
     .param {
         margin: 8px 16px;
         text-align: start;
     }
 
-    select {
-        width: 100%;
-        padding: 3px;
-        border-radius: 4px;
-    }
 
     input, select {
-        margin-top: 8px;
+        padding: 8px;
     }
 
     .charts {
@@ -248,8 +240,8 @@
 
     .timespanConfiguration {
         background-color: lightgoldenrodyellow;
-        border: solid 1px palegoldenrod;
-        padding-right: 40px;
+        padding: 16px 8px;
+        border: solid 1px orange;
     }
 
     .configPanels {
@@ -257,29 +249,10 @@
         grid-template-columns: 1fr 1fr 1fr 1fr;
     }
 
-    .gridWrapper {
-        display: grid;
-        grid-template-columns: 190px 30px 30px;
-        justify-items: center;
-        align-items: center;
-    }
-
-    .timespanInput {
-        padding: 4px;
-    }
-
-    .timespan {
-        grid-column: 1/4;
-        justify-self: flex-start;
-    }
-
-    .fa-pencil-alt {
-
-    }
-
-    .selected {
-        border-color: black;
-        background-color: yellowgreen;
+    .label {
+        font-weight: bolder;
+        font-size: 12px;
+        margin: 8px;
     }
 
     .selectedEvents {
@@ -287,11 +260,25 @@
         grid-template-columns: 1fr 1fr;
     }
 
-    .filterItem{
+    .selected {
+        background-color: yellowgreen;
+    }
+
+    .filterList {
+        min-width: 250px;
+        max-width: 250px;
+        border: solid 1px yellowgreen;
+        margin: 16px;
+    }
+
+    .filterItem {
         padding: 8px;
-        margin: 4px;
         text-align: center;
         cursor: pointer;
+    }
+
+    .filterItem:hover {
+        background-color: #c7da9f;
     }
 
 </style>

@@ -4,7 +4,6 @@ export default {
         return {
             chart: {
                 type: 'bubble',
-                width: "900px"
             },
             toolbar: {
                 show: true,
@@ -33,10 +32,12 @@ export default {
                     },
                 },
                 z: {
-                    formatter: undefined,
+                    formatter: function (value) {
+                        return value
+                    },
                     title: 'Area: '
                 },
-            }
+            },
         };
     },
 
@@ -127,8 +128,8 @@ export default {
         let dataStrongEvents = [];
         let dataExtremEvents = [];
         keys.forEach((i) => {
-            let str = i in data.strong ? data.strong[i] : 0;
             let ext = i in data.extreme ? data.extreme[i] : 0;
+            let str = i in data.strong ? data.strong[i]-ext : 0;
             dataStrongEvents.push(str);
             dataExtremEvents.push(ext);
         });
@@ -157,8 +158,8 @@ export default {
             }
             dataItem.push(new Date(item.start).getTime())
             dataItem.push(this.round(item.length, 6))
-            dataItem.push(this.round(item.area,2))
-            //dataItem.push(this.round(item.maxPrec, 6))
+            dataItem.push( this.round(item.area,2))
+            //dataItem.push(this.round(item.maxPrec, 2))
             dataItem.push(item.id)
             series[si].data.push(dataItem);
         })
