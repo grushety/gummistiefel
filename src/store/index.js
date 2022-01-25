@@ -161,6 +161,7 @@ const store = new Vuex.Store({
     },
 
     async updateFilter({commit, dispatch}, filter){
+      await functions.resetFilter()
       await functions.setFilter(filter)
       commit("setFilter", filter)
       dispatch('getAllEvents')

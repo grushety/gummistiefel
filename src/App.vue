@@ -137,8 +137,9 @@
     .controlPanel{
         background: lightgoldenrodyellow;
         padding: 16px 8px;
-        border: solid 1px orange;
+        border: solid 1px #ead4ac;
         text-align: center;
+        box-shadow:  3px 3px 3px 1px #eeeecb;
     }
 
     label{

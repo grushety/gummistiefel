@@ -2,6 +2,7 @@
     <div class="filterPanel">
         <div v-if="showEdit" class="filterConfiguration showGrid">
             <div class="Startereignisse Konfigurationen">
+                <div class="subtitle"> Starkereignisse konfigurieren</div>
                 <RangeSlider :max-value="maxPrec"
                              :min-value="minPrec"
                              :is-enabled="sprecEnabled"
@@ -33,6 +34,7 @@
                              @change="slengthEnabled = !slengthEnabled"/>
             </div>
             <div class="Extremereignisse Konfigurationen">
+                <div class="subtitle"> Extremereignisse konfigurieren</div>
                 <RangeSlider :max-value="maxPrec"
                              :min-value="eMinPrec"
                              :is-enabled="eprecEnabled"
@@ -283,7 +285,7 @@
         border: 2px solid lightgreen;
         border-radius: 4px;
         width: 100%;
-        margin: 8px 0;
+        margin: 16px 0;
     }
 
     .showGrid {
@@ -305,5 +307,9 @@
         padding: 4px 12px;
         font-weight: 600;
         font-size: 14px;
+    }
+    .subtitle{
+        margin-bottom: 8px;
+        font-weight: 600;
     }
 </style>

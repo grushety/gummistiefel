@@ -1,6 +1,13 @@
 <template>
     <div class="chartComparison">
         <div class="timespanConfiguration">
+            <div class="axisConfig">
+                <div class="axes"> Achsen Konfigurationen: </div>
+                <div> X-Achse: Startdatum</div>
+                <div> Y-Achse:  Dauer</div>
+                <div> Größe der Bubble: Räumliche Ausdehnung</div>
+                <div> Farbe : Gesamtintensität </div>
+            </div>
             <div class="configPanels">
                 <div class="leftPanel param">
                     <div class="inputItem param">
@@ -241,7 +248,7 @@
     .timespanConfiguration {
         background-color: lightgoldenrodyellow;
         padding: 16px 8px;
-        border: solid 1px orange;
+        border: solid 1px #ead4ac;
     }
 
     .configPanels {
@@ -280,6 +287,14 @@
 
     .filterItem:hover {
         background-color: #c7da9f;
+    }
+    .axisConfig{
+        display: flex;
+        justify-content: space-between;
+        width: 100%;
+    }
+    .axes{
+        font-weight: bolder;
     }
 
 </style>

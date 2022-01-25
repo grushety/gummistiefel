@@ -4,6 +4,16 @@ export default {
         return {
             chart: {
                 type: 'bubble',
+                offsetX: -10,
+                zoom: {
+                    enabled: true,
+                    type: 'xy',
+                },
+            },
+            plotOptions: {
+                bubble: {
+                    minBubbleRadius: 5,
+                }
             },
             toolbar: {
                 show: true,
@@ -24,18 +34,28 @@ export default {
                 type: 'datetime',
                 tickAmount: 12,
             },
+            yaxis: {
+                label: {
+                    show: true,
+                    text: 'Dauer',
+                    offsetY: 0,
+                }
+            },
             tooltip: {
+                enabled: true,
+                x: {
+                    show: true,
+                    title:  'Zeit: '
+
+                },
+
                 y: {
-                    formatter: undefined,
-                    title: {
-                        formatter: 'Length: ',
-                    },
+                    show: true,
+                    title:  'Dauer: ',
+
                 },
                 z: {
-                    formatter: function (value) {
-                        return value
-                    },
-                    title: 'Area: '
+                    title: 'Area: ',
                 },
             },
         };

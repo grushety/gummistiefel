@@ -11,6 +11,13 @@
                         }}</div>
                 </div>
             </div>
+            <div class="label"> Achsen Konfigurationen </div>
+            <div class="axisConfig">
+                <div> X-Achse: Startdatum</div>
+                <div> Y-Achse:  Dauer</div>
+                <div> Größe der Bubble: Räumliche Ausdehnung</div>
+                <div> Farbe : Gesamtintensität </div>
+            </div>
             <button @click="submit">Änderungen übermitteln</button>
             <div class="showOnMap" v-if="selectedItem">
                 <div class="selectedEvent" v-html="formattedSelectedItem"></div>
@@ -24,6 +31,7 @@
                 @click="clickHandler"
                 width="1200"
                 :options="options" :series="series"
+                min-bubble-radius="5"
             >
             </apexchart>
         </div>
@@ -54,6 +62,7 @@
             await this.getAllRangeEvents(params)
             this.series = this.allRangeEvents
             this.options = utils.newBubbleOptions()
+            this.options["plotOptions"]["bubble"]["minBubbleRadius"] = 5
             this.$refs.maxChart.updateSeries(this.series);
         },
         watch: {
@@ -169,6 +178,10 @@
     }
     .chart{
         justify-content: center;
+    }
+    .axisConfig{
+        padding: 16px;
+        text-align: left;
     }
 
 </style>
