@@ -1,14 +1,18 @@
 import moment from 'moment'
+
 export default {
     newBubbleOptions() {
         return {
             chart: {
                 type: 'bubble',
-                offsetX: -10,
+                offset: 20,
                 zoom: {
                     enabled: true,
                     type: 'xy',
                 },
+            },
+            fill: {
+                type: 'gradient',
             },
             plotOptions: {
                 bubble: {
@@ -17,8 +21,6 @@ export default {
             },
             toolbar: {
                 show: true,
-                offsetX: 0,
-                offsetY: 0,
                 tools: {
                     download: true,
                     selection: true,
@@ -45,18 +47,14 @@ export default {
                 enabled: true,
                 x: {
                     show: true,
-                    title:  'Zeit: '
+                    title: 'Zeit: '
 
                 },
 
-                y: {
-                    show: true,
-                    title:  'Dauer: ',
-
-                },
                 z: {
-                    title: 'Area: ',
-                },
+                    title: 'Size:'
+                }
+
             },
         };
     },
@@ -66,7 +64,6 @@ export default {
             chart: {
                 type: 'bar',
                 stacked: true,
-                width: "1000px",
                 toolbar: {
                     show: true,
                     offsetX: 0,
@@ -149,7 +146,7 @@ export default {
         let dataExtremEvents = [];
         keys.forEach((i) => {
             let ext = i in data.extreme ? data.extreme[i] : 0;
-            let str = i in data.strong ? data.strong[i]-ext : 0;
+            let str = i in data.strong ? data.strong[i] - ext : 0;
             dataStrongEvents.push(str);
             dataExtremEvents.push(ext);
         });
@@ -172,13 +169,13 @@ export default {
         ];
         events.forEach(item => {
             let dataItem = []
-            let si = this.round(item.si, 1)*10;
-            if(si > 9){
+            let si = this.round(item.si, 1) * 10;
+            if (si > 9) {
                 si = 9;
             }
             dataItem.push(new Date(item.start).getTime())
             dataItem.push(this.round(item.length, 6))
-            dataItem.push( this.round(item.area,2))
+            dataItem.push(this.round(item.area, 2))
             //dataItem.push(this.round(item.maxPrec, 2))
             dataItem.push(item.id)
             series[si].data.push(dataItem);
@@ -374,7 +371,7 @@ export default {
         return Math.round(value * multiplier) / multiplier;
     },
 
-    format_date(value){
+    format_date(value) {
         if (value) {
             return moment(String(value)).format('YYYY-MM-DD')
         }

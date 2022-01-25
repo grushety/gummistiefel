@@ -1,13 +1,6 @@
 <template>
     <div class="chartComparison">
         <div class="timespanConfiguration">
-            <div class="axisConfig">
-                <div class="axes"> Achsen Konfigurationen: </div>
-                <div> X-Achse: Startdatum</div>
-                <div> Y-Achse:  Dauer</div>
-                <div> Größe der Bubble: Räumliche Ausdehnung</div>
-                <div> Farbe : Gesamtintensität </div>
-            </div>
             <div class="configPanels">
                 <div class="leftPanel param">
                     <div class="inputItem param">
@@ -19,6 +12,8 @@
                     <div class="datePicker param">
                         <div class="label">Zeitperiode auswählen </div>
                         <Datepicker range v-model="selectedDateLeft"
+                                    :not-before="disabledBefore"
+                                    :not-after="disabledAfter"
                                     :date-format="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                                     lang="de"/>
                     </div>
@@ -42,6 +37,8 @@
                     <div class="datePicker param">
                         <div class="label">Zeitperiode auswählen </div>
                         <Datepicker range v-model="selectedDateRight"
+                                    :not-before="disabledBefore"
+                                    :not-after="disabledAfter"
                                     :date-format="{year: 'numeric', month: '2-digit', day: '2-digit'}"
                                     lang="de"/>
                     </div>
@@ -65,6 +62,13 @@
                 <button @click="showOnMap" :disabled="!(this.selectedRightItem && this.selectedLeftItem)">
                     Auf der Karte zeigen
                 </button>
+            </div>
+            <div class="axisConfig">
+                <div class="axes"> Achsen Konfigurationen: </div>
+                <div> X-Achse: Startdatum</div>
+                <div> Y-Achse:  Dauer</div>
+                <div> Größe der Bubble: Räumliche Ausdehnung</div>
+                <div> Farbe : Gesamtintensität </div>
             </div>
         </div>
         <div class="charts">
@@ -102,8 +106,10 @@
                 selectedType: 'year',
                 selectedNumberLeft: 10,
                 selectedNumberRight: 10,
-                selectedDateLeft: [new Date("1971-01-01"), new Date("2017-12-31")],
-                selectedDateRight: [new Date("1971-01-01"), new Date("2017-12-31")],
+                selectedDateLeft: [new Date("1971-01-01"), new Date("2000-12-31")],
+                selectedDateRight: [new Date("2001-01-01"), new Date("2017-12-31")],
+                disabledBefore: new Date("1971-01-01"),
+                disabledAfter: new Date("2017-12-31"),
                 filterOptions: [{id: 0, name: "Gesamtintensität"}, {id: 1, name: "Räumliche Ausdehnung"}, {id: 2, name: "Dauer"}, {
                     id: 3, name: "Niederschlagsmenge"}],
                 filterLeft: "Gesamtintensität",
@@ -249,6 +255,7 @@
         background-color: lightgoldenrodyellow;
         padding: 16px 8px;
         border: solid 1px #ead4ac;
+        box-shadow:  1px 2px 1px 1px #eeeecb;
     }
 
     .configPanels {
@@ -292,6 +299,7 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
+        margin-top:16px;
     }
     .axes{
         font-weight: bolder;

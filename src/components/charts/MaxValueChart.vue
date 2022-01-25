@@ -31,7 +31,6 @@
                 @click="clickHandler"
                 width="1200"
                 :options="options" :series="series"
-                min-bubble-radius="5"
             >
             </apexchart>
         </div>

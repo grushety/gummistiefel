@@ -119,6 +119,7 @@
     .viewTab{
         padding: 8px 0;
         margin: 0;
+        font-weight: 600;
     }
     .viewTab:hover{
         cursor:pointer;
@@ -139,6 +140,7 @@
         min-width: 60px;
         background-color: rgba(144, 238, 144, 0.24);
         display: inline-flex;
+        font-weight: 500;
     }
 
     .selected {

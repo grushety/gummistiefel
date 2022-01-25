@@ -14,7 +14,8 @@
         <div class="chart">
             <apexchart ref="mainChart"
                        @click="clickHandler"
-                       width="1400px"
+                       width="1300px"
+                       height="700px"
                        :options="options" :series="series">
             </apexchart>
         </div>
