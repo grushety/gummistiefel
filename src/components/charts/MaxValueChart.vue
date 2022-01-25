@@ -11,14 +11,15 @@
                         }}</div>
                 </div>
             </div>
-            <button @click="submit">Submit</button>
+            <button @click="submit">Änderungen übermitteln</button>
             <div class="showOnMap" v-if="selectedItem">
                 <div class="selectedEvent" v-html="formattedSelectedItem"></div>
-                <button @click="showOnMap">Show on map</button>
+                <button @click="showOnMap">Auf der Karte zeigen</button>
             </div>
         </div>
         <div class="chart">
             <apexchart
+                class="bubbleChart"
                 ref="maxChart"
                 @click="clickHandler"
                 width="1200"
@@ -120,6 +121,7 @@
         grid-template-columns: 20% auto;
         grid-gap: 40px;
         align-items: start;
+        justify-items: center;
         text-align: center;
     }
 
@@ -144,6 +146,7 @@
         min-width: 250px;
         border: solid 1px yellowgreen;
         margin: 16px;
+        box-shadow:  3px 3px 3px 1px #d8e5bd;
     }
 
     .filterItem{
@@ -163,6 +166,9 @@
     input{
         padding: 8px;
         margin: 16px;
+    }
+    .chart{
+        justify-content: center;
     }
 
 </style>

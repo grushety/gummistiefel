@@ -49,14 +49,14 @@
                     </div>
                 </div>
             </div>
-            <button @click="submit">submit</button>
+            <button @click="submit">Änderungen übermitteln</button>
             <div class="showOnMap" v-if="selectedLeftItem || selectedRightItem">
                 <div class="selectedEvents">
                     <div class v-html="formattedSelectedItemLeft"></div>
                     <div class v-html="formattedSelectedItemRight"></div>
                 </div>
-                <button @click="showOnMap" :disabled="!(this.selectedRightItem && this.selectedLeftItem)">Show on
-                    map
+                <button @click="showOnMap" :disabled="!(this.selectedRightItem && this.selectedLeftItem)">
+                    Auf der Karte zeigen
                 </button>
             </div>
         </div>
@@ -101,8 +101,8 @@
                     id: 3, name: "Niederschlagsmenge"}],
                 filterLeft: "Gesamtintensität",
                 filterLeftId: 0,
-                filterRight: "Gesamtintensität",
-                filterRightId: 0,
+                filterRight: "Räumliche Ausdehnung",
+                filterRightId: 1,
                 options: utils.newBubbleOptions(),
                 firstSeries: [],
                 secondSeries: [],
@@ -269,6 +269,7 @@
         max-width: 250px;
         border: solid 1px yellowgreen;
         margin: 16px;
+        box-shadow:  3px 3px 3px 1px #d8e5bd;
     }
 
     .filterItem {
