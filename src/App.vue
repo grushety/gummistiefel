@@ -118,7 +118,6 @@
 
     label {
         padding-bottom: 4px;
-        font-family: Calibri, fantasy;
     }
 
     input {
@@ -144,6 +143,13 @@
 
     label{
         font-family: 'Open Sans', sans-serif;
+    }
+
+    .apexcharts-tooltip {
+        background: #5fbce9;
+        font-family: 'Open Sans', sans-serif;
+        font-size: 12px!important;
+        padding: 8px;
     }
 
 

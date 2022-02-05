@@ -1,6 +1,26 @@
 <template>
     <div class="chartComparison">
         <div class="timespanConfiguration">
+            <div class="axisConfig">
+                <div class="axes"> Achsen Konfigurationen: </div>
+                <div> X-Achse:
+                    <div class="radioOption">
+                        <input type="radio" id="0x" :value=0 v-model="xaxis"><label for="0x">Startdatum</label>
+                        <input type="radio" id="1x" :value=1 v-model="xaxis" :disabled="zaxis===1"><label for="1x">
+                        Niederschlagsmenge </label>
+                    </div>
+                </div>
+                <div> Y-Achse:  Dauer</div>
+                <div> Größe der Bubble:
+                    <div class="radioOption">
+                        <input type="radio" id="0z" :value=0 v-model="zaxis"><label for="0z">Räumliche
+                        Ausdehnung</label>
+                        <input type="radio" id="1z" :value=1 v-model="zaxis" :disabled="xaxis===1"><label for="1z">
+                        Niederschlagsmenge </label>
+                    </div>
+                </div>
+                <div> Farbe : Gesamtintensität </div>
+            </div>
             <div class="configPanels">
                 <div class="leftPanel param">
                     <div class="inputItem param">
@@ -63,26 +83,19 @@
                     Auf der Karte zeigen
                 </button>
             </div>
-            <div class="axisConfig">
-                <div class="axes"> Achsen Konfigurationen: </div>
-                <div> X-Achse: Startdatum</div>
-                <div> Y-Achse:  Dauer</div>
-                <div> Größe der Bubble: Räumliche Ausdehnung</div>
-                <div> Farbe : Gesamtintensität </div>
-            </div>
         </div>
         <div class="charts">
             <apexchart
                 ref="firstChart"
-                width="800"
-                height="700"
+                width="600"
+                height="500"
                 @click="clickHandlerLeft"
                 :options="options" :series="firstSeries">
             </apexchart>
             <apexchart
                 ref="secondChart"
-                height="700"
-                width="800"
+                height="500"
+                width="600"
                 @click="clickHandlerRight"
                 :options="options" :series="secondSeries">
             </apexchart>
@@ -110,27 +123,32 @@
                 selectedDateRight: [new Date("2001-01-01"), new Date("2017-12-31")],
                 disabledBefore: new Date("1971-01-01"),
                 disabledAfter: new Date("2017-12-31"),
-                filterOptions: [{id: 0, name: "Gesamtintensität"}, {id: 1, name: "Räumliche Ausdehnung"}, {id: 2, name: "Dauer"}, {
-                    id: 3, name: "Niederschlagsmenge"}],
+                filterOptions: [
+                    {id: 0, name: "Gesamtintensität"},
+                    {id: 1, name: "Räumliche Ausdehnung"},
+                    {id: 2, name: "Dauer"},
+                    {id: 3, name: "Niederschlagsmenge"}],
                 filterLeft: "Gesamtintensität",
                 filterLeftId: 0,
                 filterRight: "Räumliche Ausdehnung",
                 filterRightId: 1,
-                options: utils.newBubbleOptions(),
+                xaxis: 0,
+                zaxis: 0,
+                options: utils.newBubbleOptions(this.xaxis, this.zaxis),
                 firstSeries: [],
                 secondSeries: [],
                 selectedLeftItem: null,
                 selectedRightItem: null,
                 idMapLeft: {},
-                idMapRight: {}
+                idMapRight: {},
             }
         },
         async created() {
-            let leftParams = this.formParams(this.filterLeftId, this.selectedNumberLeft, this.selectedDateLeft)
-            let rightParams = this.formParams(this.filterRightId, this.selectedNumberRight, this.selectedDateRight)
-            await this.getLeftRangeEvents(leftParams)
-            await this.getRightRangeEvents(rightParams)
-
+            this.options = utils.newBubbleOptions(this.xaxis, this.zaxis);
+            let leftParams = this.formParams(this.filterLeftId, this.selectedNumberLeft, this.selectedDateLeft);
+            let rightParams = this.formParams(this.filterRightId, this.selectedNumberRight, this.selectedDateRight);
+            await this.getLeftRangeEvents(leftParams);
+            await this.getRightRangeEvents(rightParams);
             this.firstSeries = this.leftRangeEvents;
             this.secondSeries = this.rightRangeEvents;
         },
@@ -168,7 +186,9 @@
                     arg: filterId,
                     k: itemNumber,
                     start: utils.format_date(selectedDateRange[0]),
-                    end: utils.format_date(selectedDateRange[1])
+                    end: utils.format_date(selectedDateRange[1]),
+                    xaxis: this.xaxis,
+                    zaxis: this.zaxis,
                 }
             },
             setLeftFilter(option) {
@@ -182,13 +202,16 @@
             async submit() {
                 let leftParams = this.formParams(this.filterLeftId, this.selectedNumberLeft, this.selectedDateLeft)
                 let rightRarams = this.formParams(this.filterRightId, this.selectedNumberRight, this.selectedDateRight)
-                await this.getLeftRangeEvents(leftParams)
-                await this.getRightRangeEvents(rightRarams)
+                await this.getLeftRangeEvents(leftParams);
+                await this.getRightRangeEvents(rightRarams);
 
                 this.firstSeries = this.leftRangeEvents;
                 this.secondSeries = this.rightRangeEvents;
-                this.$refs.firstChart.updateSeries(this.firstSeries);
-                this.$refs.secondChart.updateSeries(this.secondSeries);
+                this.options = utils.newBubbleOptions(this.xaxis, this.zaxis);
+                await this.$refs.firstChart.updateOptions(this.options);
+                await this.$refs.firstChart.updateSeries(this.firstSeries);
+                await this.$refs.secondChart.updateOptions(this.options);
+                await this.$refs.secondChart.updateSeries(this.secondSeries);
             },
 
             clickHandlerLeft(event, chartContext, config) {
@@ -220,8 +243,7 @@
             },
             formatItem(item) {
                 let html = "<span>Ausgewählte Ereigniss:</span> <br>"
-                    + "<span> ID: " + item[3] + "</span> <br>"
-                    + "<span> Anfang: " + utils.format_date(new Date(item[0])) + "</span>"
+                    + "<span> ID: " + item[3] + "</span>"
                 return html;
             },
             showOnMap() {
@@ -241,9 +263,9 @@
         text-align: start;
     }
 
-
     input, select {
-        padding: 8px;
+        padding: 4px;
+        font-family: Candara, Segoe UI Historic, sans-serif;
     }
 
     .charts {
@@ -253,7 +275,7 @@
 
     .timespanConfiguration {
         background-color: lightgoldenrodyellow;
-        padding: 16px 8px;
+        padding: 8px;
         border: solid 1px #ead4ac;
         box-shadow:  1px 2px 1px 1px #eeeecb;
     }
@@ -279,15 +301,16 @@
     }
 
     .filterList {
-        min-width: 250px;
-        max-width: 250px;
+        min-width: 230px;
+        max-width: 230px;
         border: solid 1px yellowgreen;
+        font-family: Candara, Segoe UI Historic, sans-serif;
         margin: 16px;
         box-shadow:  3px 3px 3px 1px #d8e5bd;
     }
 
     .filterItem {
-        padding: 8px;
+        padding: 4px;
         text-align: center;
         cursor: pointer;
     }
@@ -299,10 +322,24 @@
         display: flex;
         justify-content: space-between;
         width: 100%;
-        margin-top:16px;
     }
     .axes{
         font-weight: bolder;
+    }
+    .datePicker{
+        font-size: 14px;
+        padding: 0;
+    }
+    .datePicker /deep/ input {
+        height: 20px;
+    }
+    .datePicker /deep/ .number{
+        height: unset!important;
+        width: unset!important;
+    }
+    .radioOption{
+        font-family: Candara, Segoe UI Historic, sans-serif;
+        font-size: 12px;
     }
 
 </style>

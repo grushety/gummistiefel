@@ -1,23 +1,33 @@
 import moment from 'moment'
 
 export default {
-    newBubbleOptions() {
-        return {
+    newBubbleOptions(xaxis, zaxis) {
+        let options= {
             chart: {
                 type: 'bubble',
-                offset: 20,
                 zoom: {
                     enabled: true,
                     type: 'xy',
                 },
             },
+            dataLabels: {
+                formatter: (value) => { return  this.round(value - 5.0, 2) },
+            },
+            axisTicks: {
+                show: true,
+            },
+            xaxis: {
+                type : 'datetime',
+            },
+            yaxis: {
+                offsetY: 10,
+                max: 80,
+            },
             fill: {
                 type: 'gradient',
             },
-            plotOptions: {
-                bubble: {
-                    minBubbleRadius: 5,
-                }
+            grid: {
+                borderColor: '#C0C0C0',
             },
             toolbar: {
                 show: true,
@@ -32,31 +42,68 @@ export default {
                     customIcons: []
                 },
             },
-            xaxis: {
-                type: 'datetime',
-                tickAmount: 12,
-            },
-            yaxis: {
-                label: {
-                    show: true,
-                    text: 'Dauer',
-                    offsetY: 0,
-                }
-            },
             tooltip: {
-                enabled: true,
-                x: {
-                    show: true,
-                    title: 'Zeit: '
-
-                },
-
-                z: {
-                    title: 'Size:'
-                }
-
             },
         };
+
+        if(xaxis===0 && zaxis===0){
+            options.xaxis = {
+                type : 'datetime'
+            };
+            options.tooltip = {
+                custom: function({ seriesIndex, dataPointIndex, w}) {
+                    let data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                    let si_bound = "0." + seriesIndex + '-0.' + (seriesIndex + 1);
+                    let si_ubound = "> 0.9";
+                    let si = seriesIndex === 9? si_ubound : si_bound;
+                    let multiplier = Math.pow(10, 2);
+                    let area = Math.round((data[2]-5) * multiplier) / multiplier;
+                    return '<span><b> Startdatum:</b>: ' + new Date(data[0]).toISOString().slice(0, 10) + '</span><br>' +
+                        '<span><b> Dauer: </b> ' + data[1] + ' hrs '+ ' ' +'</span><br>' +
+                        '<span><b> Räumliche Ausdehnung: </b>' + area + ' ' +'</span><br>' +
+                        '<span><b> Gesamtintensität: </b>' + si + ' ' +  '</span>';
+                }
+            };
+        }
+        if(xaxis===1 && zaxis===0){
+            options.tooltip = {
+                custom: function({ seriesIndex, dataPointIndex, w}) {
+                    let si_bound = "0." + seriesIndex + '-0.' + (seriesIndex + 1);
+                    let si_ubound = "> 0.9";
+                    let si = seriesIndex === 9? si_ubound : si_bound;
+                    let data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                    let multiplier = Math.pow(10, 2);
+                    let area = Math.round((data[2]-5) * multiplier) / multiplier;
+                    return '<span><b> Niederschlagsmenge:</b>: ' + data[0] + ' ' + '</span><br>' +
+                        '<span><b> Dauer:</b>: ' + data[1] + ' hrs'+'</span><br>' +
+                        '<span><b> Räumliche Ausdehnung:</b>' + area + ' ' +'</span><br>' +
+                        '<span><b> Gesamtintensität:</b>' + si +  ' ' + '</span>';
+                }
+            };
+            options.xaxis = {
+                type : 'numeric'
+            }
+        }
+        if(xaxis===0 && zaxis===1 ){
+            options.xaxis = {
+                type : 'datetime'
+            };
+            options.tooltip = {
+                custom: function({ seriesIndex, dataPointIndex, w}) {
+                    let si_bound = "0." + seriesIndex + '-0.' + (seriesIndex + 1);
+                    let si_ubound = "> 0.9";
+                    let si = seriesIndex === 9? si_ubound : si_bound;
+                    let data = w.globals.initialSeries[seriesIndex].data[dataPointIndex];
+                    let multiplier = Math.pow(10, 2);
+                    let maxPrec = Math.round((data[2] -5) * multiplier) / multiplier;
+                    return '<span><b> Startdatum: </b>: ' + new Date(data[0]).toISOString().slice(0, 10) + ' ' + '</span><br>' +
+                        '<span><b> Dauer: </b>: ' + data[1] + ' hrs'+ ' ' +'</span><br>' +
+                        '<span><b> Niederschlagsmenge: </b>:' + maxPrec + ' ' +'</span><br>' +
+                        '<span><b> Gesamtintensität: </b>' + si +  ' ' + '</span>';
+                }
+            };
+        }
+        return options;
     },
 
     newStackedHistogramOptions() {
@@ -154,7 +201,7 @@ export default {
             {name: 'Extremereignisse', data: dataExtremEvents, color: '#f81d16'},]
     },
 
-    formatDataForBubblePlot(events) {
+    formatDataForBubblePlot(events, xaxis, zaxis) {
         let series = [
             {name: "si 0-0.1", data: [], color: '#ff8080'},
             {name: "si 0.1-0.2", data: [], color: '#ff6666'},
@@ -162,24 +209,34 @@ export default {
             {name: "si 0.3-0.4", data: [], color: '#ff1a1a'},
             {name: "si 0.4-0.5", data: [], color: '#ff0000'},
             {name: "si 0.5-0.6", data: [], color: '#cc0000'},
-            {name: "si 0.6-0.7", data: [], color: '#990000'},
-            {name: "si 0.7-0.8", data: [], color: '#660000'},
-            {name: "si 0.8-0.9", data: [], color: '#330000'},
-            {name: "si > 0.9", data: [], color: '#1a0000'},
+            {name: "si 0.6-0.7", data: [], color: '#b40000'},
+            {name: "si 0.7-0.8", data: [], color: '#960000'},
+            {name: "si 0.8-0.9", data: [], color: '#780000'},
+            {name: "si > 0.9", data: [], color: '#640000'},
         ];
         events.forEach(item => {
-            let dataItem = []
+            let dataItem = [];
             let si = this.round(item.si, 1) * 10;
             if (si > 9) {
                 si = 9;
             }
-            dataItem.push(new Date(item.start).getTime())
-            dataItem.push(this.round(item.length, 6))
-            dataItem.push(this.round(item.area, 2))
-            //dataItem.push(this.round(item.maxPrec, 2))
-            dataItem.push(item.id)
+            if(xaxis===0) {
+                dataItem.push(new Date(item.start).getTime());
+            }
+            else {
+                dataItem.push(this.round(item.maxPrec, 2));
+            }
+            dataItem.push(this.round(item.length, 6));
+            if(zaxis===0) {
+                dataItem.push(this.round((item.area + 5), 2));
+            }
+            else {
+                dataItem.push(this.round(item.maxPrec + 5, 2));
+            }
+            dataItem.push(item.id);
             series[si].data.push(dataItem);
-        })
+        });
+        console.log(xaxis, zaxis);
         return series
     },
 
@@ -209,11 +266,11 @@ export default {
             {name: "si > 0.9", data: [], color: '#1a0000'},
         ];
         dates.forEach((item) => {
-            let oneData = []
+            let oneData = [];
             //oneData.push(item)
-            let si = (this.getRandomArbitrary(0, 9))
-            oneData.push(new Date(item).getTime())
-            oneData.push(this.getRandomArbitrary(0, 80))
+            let si = (this.getRandomArbitrary(0, 9));
+            oneData.push(new Date(item).getTime());
+            oneData.push(this.getRandomArbitrary(0, 80));
             oneData.push(this.getRandomArbitrary(5, 20));
             series[si].data.push(oneData);
         });
@@ -263,15 +320,15 @@ export default {
         let min = 0;
         let max = 100;
         if (filter === "area") {
-            min = 4
+            min = 4;
             max = 80
         }
         if (filter === "duration") {
-            min = 0
+            min = 0;
             max = 100
         }
         if (filter === "severity") {
-            min = 0
+            min = 0;
             max = 1
         }
         let years = this.getAllYears();
@@ -279,7 +336,7 @@ export default {
         years.forEach(item => {
             let obj = {};
             obj.x = new Date(item);
-            obj.y = this.generateRandomNumbersForBoxPlot(min, max)
+            obj.y = this.generateRandomNumbersForBoxPlot(min, max);
             data.push(obj)
         });
         return [{
@@ -292,15 +349,15 @@ export default {
         let min = 0;
         let max = 100;
         if (filter === "area") {
-            min = 4
+            min = 4;
             max = 80
         }
         if (filter === "duration") {
-            min = 0
+            min = 0;
             max = 100
         }
         if (filter === "severity") {
-            min = 0
+            min = 0;
             max = 1
         }
         let data = [];
@@ -308,7 +365,7 @@ export default {
         months.forEach(item => {
             let obj = {};
             obj.x = new Date("01 " + item + " " + year);
-            obj.y = this.generateRandomNumbersForBoxPlot(min, max)
+            obj.y = this.generateRandomNumbersForBoxPlot(min, max);
             data.push(obj)
         });
         return [{
@@ -320,7 +377,7 @@ export default {
     generateRandomNumbersForBoxPlot(min, max) {
         let unsorted = [];
         for (let i = 0; i < 5; i++) {
-            let number = this.getRandomArbitrary(min, max)
+            let number = this.getRandomArbitrary(min, max);
             unsorted.push(number)
         }
         return unsorted.sort(function (a, b) {
@@ -340,7 +397,7 @@ export default {
     getAllDaysKey() {
         let keys = [];
         for (let i = 1; i < 31; i++) {
-            let key = i < 10 ? "0" + String(i) : String(i)
+            let key = i < 10 ? "0" + String(i) : String(i);
             keys.push(key);
         }
         return keys;
@@ -349,7 +406,7 @@ export default {
     getMonthCode(monthName) {
         let monthNames = this.getAllMonth();
         let monthCode = this.getAllMonthKey();
-        let index = monthNames.indexOf(monthName)
+        let index = monthNames.indexOf(monthName);
         return index >= 0 ? monthCode[index] : -1;
     },
 

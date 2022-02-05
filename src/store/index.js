@@ -135,23 +135,23 @@ const store = new Vuex.Store({
     },
 
     async getAllRangeEvents({commit}, params){
-      params["start"]="1971-01-01"
-      params["end"]="2017-12-31"
-      const events = await functions.getTopEvents(params)
-      commit('setOriginalFormattedAllRangeEvents', events)
-      let formattedEvents = utils.formatDataForBubblePlot(events)
+      params["start"]="1971-01-01";
+      params["end"]="2017-12-31";
+      const events = await functions.getTopEvents(params);
+      commit('setOriginalFormattedAllRangeEvents', events);
+      let formattedEvents = utils.formatDataForBubblePlot(events, params.xaxis, params.zaxis);
       commit('setAllRangeEvents', formattedEvents)
     },
 
     async getLeftRangeEvents({commit}, params){
-      const events = await functions.getTopEvents(params)
-      let formattedEvents = utils.formatDataForBubblePlot(events)
+      const events = await functions.getTopEvents(params);
+      let formattedEvents = utils.formatDataForBubblePlot(events, params.xaxis, params.zaxis);
       commit('setLeftRangeEvents', formattedEvents)
     },
 
     async getRightRangeEvents({commit}, params){
-      const events = await functions.getTopEvents(params)
-      let formattedEvents = utils.formatDataForBubblePlot(events)
+      const events = await functions.getTopEvents(params);
+      let formattedEvents = utils.formatDataForBubblePlot(events, params.xaxis, params.zaxis);
       commit('setRightRangeEvents', formattedEvents)
     },
 

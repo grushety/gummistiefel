@@ -1,7 +1,6 @@
 <template>
     <div class="header">
         <div class="left">
-            <img id="logo" src="../../assets/hu-logo.jpg" title="logo" :alt="'logo'">
             <div class="header-title">
                 <h3 class="title">Visual representation of the "Gummistiefel" project</h3>
             </div>
@@ -20,8 +19,6 @@
         position: relative;
         top: 0;
         left: 0;
-        display: inline-flex;
-        justify-content: space-between;
         padding: 16px;
         width: 100%;
         background-color: #ECEFF1;
@@ -30,13 +27,9 @@
     .title {
         display: inline;
         color: #505050;
-        font: Bold 20px/27px Open Sans;
+        font: Bold 18px/26px Open Sans;
         margin-left: 16px;
-    }
-
-    #logo {
-        width: 50px;
-        border-radius: 50%;
+        width: 100%;
     }
 
     a {
@@ -46,8 +39,4 @@
         color: black
     }
 
-    .left {
-        display: flex;
-        align-items: center;
-    }
 </style>
