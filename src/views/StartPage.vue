@@ -21,17 +21,21 @@
                 <BoxPlotChart v-if="showBoxPlot"/>
             </div>
             <div class="maps">
-                <Map :first-id="singleMapId"/>
+                <Map :id="singleMapId"/>
             </div>
         </div>
         <div class="compareViewContent" v-if="compareView">
             <div class="compareGraphs">
                 <ChartComparison @setMap="setMapDoubleView"/>
             </div>
-            <div class="maps">
-                <Map :first-id="leftMapId" :second-id="rightMapId" compare-view/>
+            <button v-if="leftMapId && rightMapId" @click="playBothMaps" style="margin-bottom:10px">Beide Abspielen</button>
+            <div class="maps" v-if="leftMapId && rightMapId">
+                <Map :id="leftMapId" class="map" ref="map1" />
+                <Map :id="rightMapId" class="map" ref="map2" />
             </div>
         </div>
+        <br>
+        <br>
     </div>
 </template>
 
@@ -74,6 +78,11 @@
         },
         methods: {
             ...mapActions(["getAllEvents"]),
+            playBothMaps() {
+                console.log("PLAY BOTH")
+                this.$refs.map1.play();
+                this.$refs.map2.play();
+            },
             setShowMain() {
                 this.showMainGraph = true;
                 this.showKMaxGraph = false;
@@ -112,6 +121,12 @@
 </script>
 
 <style scoped>
+    .map {
+        display: inline-block;
+        width: calc(50% - 40px);
+        padding: 0 20px;
+    }
+
     .pageTabs{
         display: grid;
         grid-template-columns: 1fr 1fr;

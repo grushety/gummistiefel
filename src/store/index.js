@@ -31,8 +31,9 @@ const store = new Vuex.Store({
     eventOfSingleMap: [],
     eventOfLeftMap: [],
     eventOfRightMap: [],
+
     // Used for play animation on map
-    interval: null,
+    interval: {},
   },
   mutations: {
 
@@ -76,12 +77,14 @@ const store = new Vuex.Store({
       state.eventOfRightMap=event
     },
 
-    setInterval(state, callback, ms) {
-      state.interval = setInterval(callback, ms);
+    setInterval(state, { key, cb, ms }) {
+      console.log("setinterval", key, cb, ms)
+      state.interval[key] = setInterval(cb, ms);
     },
-    clearInterval(state) {
-      clearInterval(state.interval);
-      state.interval = null;
+    clearInterval(state, key) {
+      console.log("clearinterval", key)
+      clearInterval(state.interval[key]);
+      state.interval[key] = null;
     },
 
     setEvents(state, events){
