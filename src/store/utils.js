@@ -260,10 +260,10 @@ export default {
             {name: "si 0.3-0.4", data: [], color: '#ff1a1a'},
             {name: "si 0.4-0.5", data: [], color: '#ff0000'},
             {name: "si 0.5-0.6", data: [], color: '#cc0000'},
-            {name: "si 0.6-0.7", data: [], color: '#990000'},
-            {name: "si 0.7-0.8", data: [], color: '#660000'},
-            {name: "si 0.8-0.9", data: [], color: '#330000'},
-            {name: "si > 0.9", data: [], color: '#1a0000'},
+            {name: "si 0.6-0.7", data: [], color: '#b40000'},
+            {name: "si 0.7-0.8", data: [], color: '#960000'},
+            {name: "si 0.8-0.9", data: [], color: '#780000'},
+            {name: "si > 0.9", data: [], color: '#640000'},
         ];
         dates.forEach((item) => {
             let oneData = [];
