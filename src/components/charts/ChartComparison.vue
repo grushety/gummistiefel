@@ -119,9 +119,9 @@
                 selectedType: 'year',
                 selectedNumberLeft: 10,
                 selectedNumberRight: 10,
-                selectedDateLeft: [new Date("1971-01-01"), new Date("2000-12-31")],
+                selectedDateLeft: [new Date("1979-01-01"), new Date("2000-12-31")],
                 selectedDateRight: [new Date("2001-01-01"), new Date("2017-12-31")],
-                disabledBefore: new Date("1971-01-01"),
+                disabledBefore: new Date("1979-01-01"),
                 disabledAfter: new Date("2017-12-31"),
                 filterOptions: [
                     {id: 0, name: "Gesamtintensität"},
