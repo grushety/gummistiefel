@@ -114,7 +114,7 @@ export default {
             this.events = res.data.map(event => ({
                 ...event,
                 date: new Date(event.date),
-                si: event.si + 0.5
+                si: event.si
             }));
             this.visibleEvents = [this.events[0]];
             this.timestamp = this.events[0].date.getTime();
@@ -127,7 +127,7 @@ export default {
         circle.setAttributeNS(null,"cx",100);
         circle.setAttributeNS(null,"cy",100);
         circle.setAttributeNS(null,"r",50);
-        circle.setAttributeNS(null,"fill","red");
+        circle.setAttributeNS(null,"fill","rgb(255,0,0)");
         circle.setAttributeNS(null,"fill-opacity",0.8);
         circle.setAttributeNS(null,"stroke","none");
         svg.appendChild(circle);
@@ -146,7 +146,6 @@ export default {
                 this.$store.commit('setInterval', {
                     key: this.key, 
                     cb: () => {
-                        console.log("bub")
                         this.timestamp += 60 * 1000 / speed;
                         if (this.timestamp >= this.endTime) {
                             this.$store.commit('clearInterval', this.key)
@@ -155,7 +154,6 @@ export default {
                     speed
                 })
             } else {
-                console.log("pause")
                 this.$store.commit('clearInterval', this.key)
             }
         },
@@ -171,8 +169,8 @@ export default {
                 circle.setAttributeNS(null, "cx", radius);
                 circle.setAttributeNS(null, "cy", radius);
                 circle.setAttributeNS(null, "r", radius);
-                circle.setAttributeNS(null, "fill", "red");
-                circle.setAttributeNS(null, "fill-opacity", event.si);
+                circle.setAttributeNS(null, "fill", "rgb(255,0,0)");
+                circle.setAttributeNS(null, "fill-opacity", 0.5 + event.si/2);
                 circle.setAttributeNS(null, "stroke", "none");
                 
                 svg.appendChild(circle);
