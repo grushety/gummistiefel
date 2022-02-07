@@ -203,16 +203,16 @@ export default {
 
     formatDataForBubblePlot(events, xaxis, zaxis) {
         let series = [
-            {name: "si 0-0.1", data: [], color: 'rgba(125, 0, 0, 0.55)'},
-            {name: "si 0.1-0.2", data: [], color: 'rgba(125, 0, 0, 0.60)'},
-            {name: "si 0.2-0.3", data: [], color: 'rgba(125, 0, 0, 0.65)'},
-            {name: "si 0.3-0.4", data: [], color: 'rgba(125, 0, 0, 0.7)'},
-            {name: "si 0.4-0.5", data: [], color: 'rgba(125, 0, 0, 0.75)'},
-            {name: "si 0.5-0.6", data: [], color: 'rgba(125, 0, 0, 0.8)'},
-            {name: "si 0.6-0.7", data: [], color: 'rgba(125, 0, 0, 0.85)'},
-            {name: "si 0.7-0.8", data: [], color: 'rgba(125, 0, 0, 0.9)'},
-            {name: "si 0.8-0.9", data: [], color: 'rgba(125, 0, 0, 0.95)'},
-            {name: "si > 0.9", data: [], color: 'rgba(125, 0, 0, 1)'},
+            {name: "si 0-0.1", data: [], color: 'rgba(255, 0, 0, 0.55)'},
+            {name: "si 0.1-0.2", data: [], color: 'rgba(255, 0, 0, 0.60)'},
+            {name: "si 0.2-0.3", data: [], color: 'rgba(255, 0, 0, 0.65)'},
+            {name: "si 0.3-0.4", data: [], color: 'rgba(255, 0, 0, 0.7)'},
+            {name: "si 0.4-0.5", data: [], color: 'rgba(255, 0, 0, 0.75)'},
+            {name: "si 0.5-0.6", data: [], color: 'rgba(255, 0, 0, 0.8)'},
+            {name: "si 0.6-0.7", data: [], color: 'rgba(255, 0, 0, 0.85)'},
+            {name: "si 0.7-0.8", data: [], color: 'rgba(255, 0, 0, 0.9)'},
+            {name: "si 0.8-0.9", data: [], color: 'rgba(255, 0, 0, 0.95)'},
+            {name: "si > 0.9", data: [], color: 'rgba(255, 0, 0, 1)'},
         ];
         events.forEach(item => {
             let dataItem = [];

@@ -127,7 +127,7 @@ export default {
         circle.setAttributeNS(null,"cx",100);
         circle.setAttributeNS(null,"cy",100);
         circle.setAttributeNS(null,"r",50);
-        circle.setAttributeNS(null,"fill","rgb(125,0,0)");
+        circle.setAttributeNS(null,"fill","rgb(255,0,0)");
         circle.setAttributeNS(null,"fill-opacity",0.8);
         circle.setAttributeNS(null,"stroke","none");
         svg.appendChild(circle);
@@ -169,7 +169,7 @@ export default {
                 circle.setAttributeNS(null, "cx", radius);
                 circle.setAttributeNS(null, "cy", radius);
                 circle.setAttributeNS(null, "r", radius);
-                circle.setAttributeNS(null, "fill", "rgb(125,0,0)");
+                circle.setAttributeNS(null, "fill", "rgb(255,0,0)");
                 circle.setAttributeNS(null, "fill-opacity", 0.5 + event.si/2);
                 circle.setAttributeNS(null, "stroke", "none");
                 
