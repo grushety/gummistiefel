@@ -20,8 +20,8 @@
                 <MaxValueChart v-if="showKMaxGraph" @setMap="setMapSingleView"/>
                 <BoxPlotChart v-if="showBoxPlot"/>
             </div>
-            <div class="maps">
-                <Map :id="singleMapId"/>
+            <div v-if="singleMapId" class="maps">
+                <Map :id="singleMapId" :key="singleMapId" />
             </div>
         </div>
         <div class="compareViewContent" v-if="compareView">
@@ -29,7 +29,7 @@
                 <ChartComparison @setMap="setMapDoubleView"/>
             </div>
             <button v-if="leftMapId && rightMapId" @click="playBothMaps" style="margin-bottom:10px">Beide Abspielen</button>
-            <div class="maps" v-if="leftMapId && rightMapId">
+            <div class="maps" v-if="leftMapId && rightMapId" :key="leftMapId + '' + rightMapId">
                 <Map :id="leftMapId" class="map" ref="map1" />
                 <Map :id="rightMapId" class="map" ref="map2" />
             </div>
