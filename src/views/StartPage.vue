@@ -11,7 +11,7 @@
             </div>
             <div class="tabs">
                 <p class="tab" :class="showMainGraph? 'selected': ''" @click="setShowMain">Main Graph</p>
-                <p class="tab" :class="showKMaxGraph? 'selected': ''" @click="setShowKMax">K- Exteme Ereignisse
+                <p class="tab" :class="showKMaxGraph? 'selected': ''" @click="setShowKMax">K- Extreme Ereignisse
                     Graph</p>
                 <!--<p class="tab" :class="showBoxPlot? 'selected': ''" @click="setShowBoxPlot">K- BoxPlot </p>-->
             </div>
